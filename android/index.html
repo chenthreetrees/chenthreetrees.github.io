@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Android开发过程中的一些小技巧，代码片段，方便快速开发，提高效率">
+<meta name="description" content="该篇主要收集Android学习资料和技术文档记录Android开发过程中的一些小技巧，代码片段，方便快速开发，提高效率  学习资料技术文档代码速查xmlbutton常用点击效果：1234567&amp;lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&amp;gt;&amp;lt;item android:state_press">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Android速查">
+<meta property="og:title" content="三木">
 <meta property="og:url" content="http://chenthreetrees.github.io/android/index.html">
 <meta property="og:site_name" content="三木">
-<meta property="og:description" content="Android开发过程中的一些小技巧，代码片段，方便快速开发，提高效率">
+<meta property="og:description" content="该篇主要收集Android学习资料和技术文档记录Android开发过程中的一些小技巧，代码片段，方便快速开发，提高效率  学习资料技术文档代码速查xmlbutton常用点击效果：1234567&amp;lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&amp;gt;&amp;lt;item android:state_press">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-04T01:49:33.846Z">
+<meta property="og:updated_time" content="2018-06-04T06:07:45.576Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android速查">
-<meta name="twitter:description" content="Android开发过程中的一些小技巧，代码片段，方便快速开发，提高效率">
+<meta name="twitter:title" content="三木">
+<meta name="twitter:description" content="该篇主要收集Android学习资料和技术文档记录Android开发过程中的一些小技巧，代码片段，方便快速开发，提高效率  学习资料技术文档代码速查xmlbutton常用点击效果：1234567&amp;lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&amp;gt;&amp;lt;item android:state_press">
 
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <title>Android速查 | 三木</title>
+  <title> | 三木</title>
   
 
 
@@ -275,7 +275,7 @@
     <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">Android速查</h1>
+	<h1 class="post-title" itemprop="name headline"></h1>
 
 
 
@@ -287,7 +287,28 @@
       <div class="post-body">
         
         
-          <p>Android开发过程中的一些小技巧，代码片段，方便快速开发，提高效率</p>
+          <blockquote>
+<p>该篇主要收集Android学习资料和技术文档<br>记录Android开发过程中的一些小技巧，代码片段，方便快速开发，提高效率</p>
+</blockquote>
+<h2 id="学习资料"><a href="#学习资料" class="headerlink" title="学习资料"></a>学习资料</h2><h2 id="技术文档"><a href="#技术文档" class="headerlink" title="技术文档"></a>技术文档</h2><h2 id="代码速查"><a href="#代码速查" class="headerlink" title="代码速查"></a>代码速查</h2><h3 id="xml"><a href="#xml" class="headerlink" title="xml"></a>xml</h3><p><strong>button常用点击效果：</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;selector xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span><br><span class="line">&lt;item android:state_pressed=<span class="string">"true"</span></span><br><span class="line">      android:drawable=<span class="string">"@drawable/btn_login_press"</span>/&gt; &lt;!-- pressed --&gt;</span><br><span class="line">&lt;item android:state_focused=<span class="string">"true"</span></span><br><span class="line">      android:drawable=<span class="string">"@drawable/btn_login_press"</span>/&gt; &lt;!-- focused --&gt;</span><br><span class="line">&lt;item android:drawable=<span class="string">"@drawable/btn_login_mornal"</span>/&gt; &lt;!-- default --&gt;</span><br><span class="line">&lt;/selector&gt;</span><br></pre></td></tr></table></figure></p>
+<p><strong>styles.xml文件下的一些常用样式：</strong><br>dialog常用样式：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;style name=<span class="string">"my_dialog"</span>&gt;</span><br><span class="line">       &lt;!-- 是否有边框 --&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowFrame"</span>&gt;@null&lt;/item&gt;</span><br><span class="line">       &lt;!--是否在悬浮Activity之上  --&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowIsFloating"</span>&gt;<span class="literal">true</span>&lt;/item&gt;</span><br><span class="line">       &lt;!-- 标题 --&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowNoTitle"</span>&gt;<span class="literal">true</span>&lt;/item&gt;</span><br><span class="line">       &lt;!--阴影  --&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowIsTranslucent"</span>&gt;<span class="literal">true</span>&lt;/item&gt;&lt;!--半透明--&gt;</span><br><span class="line">       &lt;!--背景透明--&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowBackground"</span>&gt;@android:color/transparent&lt;/item&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:backgroundDimEnabled"</span>&gt;<span class="literal">true</span>&lt;/item&gt;</span><br><span class="line">   &lt;/style&gt;</span><br></pre></td></tr></table></figure></p>
+<p>欢迎页，如果带大图当背景：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;style name=<span class="string">"WelcomeStyle"</span> parent=<span class="string">"MarioTheme"</span>&gt;</span><br><span class="line">       &lt;!-- 隐藏Activity窗口的ActionBar --&gt;</span><br><span class="line">       &lt;item name=<span class="string">"windowActionBar"</span>&gt;<span class="literal">false</span>&lt;/item&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowNoTitle"</span>&gt;<span class="literal">true</span>&lt;/item&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowFullscreen"</span>&gt;<span class="literal">true</span>&lt;/item&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowBackground"</span>&gt;@drawable/img_welcome&lt;/item&gt;</span><br><span class="line">   &lt;/style&gt;</span><br></pre></td></tr></table></figure></p>
+<p><strong>listview一些重要属性：</strong></p>
+<pre><code class="bash">//用ListView或者其它显示大量Items的控件实时跟踪或者查看信息,
+//希望最新的条目可以自动滚动到可视范围内。
+//通过设置的控件transcriptMode属性可以将
+//Android平台的控件（支持ScrollBar）自动滑动到最底部
+android:transcriptMode=<span class="string">"alwaysScroll"</span>   
+android:cacheColorHint=<span class="string">"#00000000"</span>
+android:listSelector=<span class="string">"@color/pink"</span> listView item 选中时的颜色。
+android:divider=<span class="string">"#f9b68b"</span>  //分割线颜色
+android:divider=<span class="string">"@drawable/@null"</span> //不想显示分割线
+android:dividerHeight=<span class="string">"1dp"</span>  //分割线边距
+android:scrollbars=<span class="string">"none"</span>  //setVerticalScrollBarEnabled(<span class="literal">true</span>);不显示滚动条
+android:fadeScrollbars=<span class="string">"true"</span>//设置为<span class="literal">true</span>就可以实现滚动条的自动隐藏和显示
+android:fadingEdge=<span class="string">"none"</span>   去掉上边和下边黑色的阴影     
+android:fastScrollEnabled = <span class="string">"true"</span> //加快滑动速度
+</code></pre>
 
         
       </div>
@@ -330,8 +351,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -350,7 +380,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -361,7 +391,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -372,7 +402,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -395,6 +425,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#学习资料"><span class="nav-number">1.</span> <span class="nav-text">学习资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术文档"><span class="nav-number">2.</span> <span class="nav-text">技术文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码速查"><span class="nav-number">3.</span> <span class="nav-text">代码速查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#xml"><span class="nav-number">3.1.</span> <span class="nav-text">xml</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
