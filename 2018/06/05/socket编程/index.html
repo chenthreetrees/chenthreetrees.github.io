@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,socket," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="socket的原理和介绍，网上一搜一大把，但是在我开发遇到问题时候却鲜有博客能搜索到，在此就不多花时间了，给个传送门 在开发过程中，对socker数据流的包装，格式的协商制定，很重要，毕竟是跨平台通信，两端其中一端没有处理好数据都会出现问题，而且也不好调试 socket编程记录下android端简单的socket代码：1234567891011121314151617181920212223242">
+<meta name="keywords" content="Android,socket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Socket开发">
+<meta property="og:url" content="http://chenthreetrees.github.io/2018/06/05/socket编程/index.html">
+<meta property="og:site_name" content="三木">
+<meta property="og:description" content="socket的原理和介绍，网上一搜一大把，但是在我开发遇到问题时候却鲜有博客能搜索到，在此就不多花时间了，给个传送门 在开发过程中，对socker数据流的包装，格式的协商制定，很重要，毕竟是跨平台通信，两端其中一端没有处理好数据都会出现问题，而且也不好调试 socket编程记录下android端简单的socket代码：1234567891011121314151617181920212223242">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-05T06:47:08.050Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Socket开发">
+<meta name="twitter:description" content="socket的原理和介绍，网上一搜一大把，但是在我开发遇到问题时候却鲜有博客能搜索到，在此就不多花时间了，给个传送门 在开发过程中，对socker数据流的包装，格式的协商制定，很重要，毕竟是跨平台通信，两端其中一端没有处理好数据都会出现问题，而且也不好调试 socket编程记录下android端简单的socket代码：1234567891011121314151617181920212223242">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://chenthreetrees.github.io/2018/06/05/socket编程/"/>
+
+
+
+
+
+  <title>Android Socket开发 | 三木</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">三木</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">自从当年我背井离乡，乡里人就没喝过一口水</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-android">
+          <a href="/android/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-android"></i> <br />
+            
+            Android
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://chenthreetrees.github.io/2018/06/05/socket编程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="threetree">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三木">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android Socket开发</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-05T11:18:35+08:00">
+                2018-06-05
+              </time>
+            
+
+            
+
+            
+          </span>
+		  
+		  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+			</script>
+			
+				<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv">
+				</span> 次</span>
+			
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/通信/" itemprop="url" rel="index">
+                    <span itemprop="name">通信</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/通信/socket/" itemprop="url" rel="index">
+                    <span itemprop="name">socket</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>socket的原理和介绍，网上一搜一大把，但是在我开发遇到问题时候却鲜有博客能搜索到，<br>在此就不多花时间了，给个<a href="https://www.jianshu.com/p/089fb79e308b" target="_blank" rel="noopener">传送门</a></p>
+<p>在开发过程中，对socker数据流的包装，格式的协商制定，很重要，<br>毕竟是跨平台通信，两端其中一端没有处理好数据都会出现问题，而且也不好调试</p>
+<h2 id="socket编程"><a href="#socket编程" class="headerlink" title="socket编程"></a>socket编程</h2><p><strong>记录下android端简单的socket代码：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">public abstract class BaseSocket &#123;</span><br><span class="line"></span><br><span class="line">    private final String TAG = &quot;BaseSocket&quot;;</span><br><span class="line">    // 主线程Handler</span><br><span class="line">    // 用于将从服务器获取的消息显示出来</span><br><span class="line">    protected Handler mMainHandler;</span><br><span class="line">    // Socket变量</span><br><span class="line">    protected Socket socket;</span><br><span class="line">    // 此处直接采用线程池进行线程管理,而没有一个个开线程</span><br><span class="line">    protected ExecutorService mThreadPool;</span><br><span class="line">    // 输入流对象</span><br><span class="line">    protected InputStream is;</span><br><span class="line">    // 输出流对象</span><br><span class="line">    protected OutputStream os;</span><br><span class="line"></span><br><span class="line">    protected String ip;</span><br><span class="line">    protected int port;</span><br><span class="line"></span><br><span class="line">    public BaseSocket(Handler handler, String ip, int port)</span><br><span class="line">    &#123;</span><br><span class="line">        mMainHandler = handler;</span><br><span class="line">        this.ip = ip;</span><br><span class="line">        this.port = port;</span><br><span class="line">        mThreadPool = Executors.newCachedThreadPool();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean connect()</span><br><span class="line">    &#123;</span><br><span class="line">        // 利用线程池直接开启一个线程 &amp; 执行该线程</span><br><span class="line">        mThreadPool.execute(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run()</span><br><span class="line">            &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    // 创建Socket对象 &amp; 指定服务端的IP 及 端口号</span><br><span class="line">                    while (socket == null || !socket.isConnected()) &#123;</span><br><span class="line">                        socket = new Socket();</span><br><span class="line">                        socket.setTcpNoDelay(true);</span><br><span class="line">                        SocketAddress socAddress = new InetSocketAddress(ip, port);</span><br><span class="line">                        socket.connect(socAddress, 5000);</span><br><span class="line">                    &#125;</span><br><span class="line">                    Log.d(TAG, &quot;socket connect=&gt;&quot; + socket.isConnected());</span><br><span class="line"></span><br><span class="line">                &#125; catch (UnknownHostException e) &#123;</span><br><span class="line">                    Log.d(TAG, &quot;connect exception=&gt;&quot; + e.getMessage());</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    Log.d(TAG, &quot;connect exception=&gt;&quot; + e.getMessage());</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                recvMessage();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected abstract void recvMessage();</span><br><span class="line"></span><br><span class="line">    protected abstract void sendMessage(String content);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public void close()</span><br><span class="line">    &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            if (socket != null) &#123;</span><br><span class="line">                if (!socket.isOutputShutdown()) &#123;</span><br><span class="line">                    socket.shutdownOutput();</span><br><span class="line">                &#125;</span><br><span class="line">                if (!socket.isInputShutdown()) &#123;</span><br><span class="line">                    socket.shutdownInput();</span><br><span class="line">                &#125;</span><br><span class="line">                socket = null;</span><br><span class="line">                Log.d(TAG, &quot;socket close&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            Log.d(TAG, &quot;close exception=&gt;&quot; + e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>由于业务需求对socket的使用不止一处，这里简单的封装基类</p>
+<p><strong>下面是一个具体的业务实现类：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">public class SocketClient extends BaseSocket &#123;</span><br><span class="line"></span><br><span class="line">    private final String TAG = &quot;SocketClient&quot;;</span><br><span class="line"></span><br><span class="line">    public SocketClient(Handler handler, String ip, int port)</span><br><span class="line">    &#123;</span><br><span class="line">        super(handler, ip, port);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void recvMessage()</span><br><span class="line">    &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            //创建输入流对象InputStream</span><br><span class="line">            is = socket.getInputStream();</span><br><span class="line">            int length;</span><br><span class="line">            byte[] inputByte = new byte[60];</span><br><span class="line">            while ((length = is.read(inputByte, 0, inputByte.length)) &gt; 0) &#123;</span><br><span class="line">                String result = new String(inputByte, 0, length, &quot;UTF-8&quot;);</span><br><span class="line">                Log.e(TAG, &quot;socket recv=&gt;content:&quot; + result);</span><br><span class="line">				//通过与服务端协商的数据流格式来解析，根据解析后的不同指令来更新UI</span><br><span class="line">//				Message msg = Message.obtain();</span><br><span class="line">//				msg.what = STATE_FROM_SERVER_ERR;</span><br><span class="line">//              msg.obj = value;</span><br><span class="line">//              mMainHandler.sendMessage(msg);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            </span><br><span class="line">            Log.d(TAG, &quot;recv exception=&gt;&quot; + e.getMessage());</span><br><span class="line">        &#125;catch (NullPointerException e)</span><br><span class="line">        &#123;</span><br><span class="line">            Log.d(TAG, &quot;recv exception=&gt;&quot; + e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">        finally &#123;</span><br><span class="line">            close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void sendMessage(final String content)</span><br><span class="line">    &#123;</span><br><span class="line">        if (socket == null || !socket.isConnected()) &#123;</span><br><span class="line">            Log.d(TAG, &quot;socket reconnect...&quot;);</span><br><span class="line">            //重连</span><br><span class="line">            connect();</span><br><span class="line">        &#125;</span><br><span class="line">        // 利用线程池直接开启一个线程 &amp; 执行该线程</span><br><span class="line">        mThreadPool.execute(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run()</span><br><span class="line">            &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    os = socket.getOutputStream();</span><br><span class="line">                    DataOutputStream dos = new DataOutputStream(os);</span><br><span class="line">                    byte[] buf = content.getBytes(&quot;UTF-8&quot;);</span><br><span class="line">                    dos.write(buf, 0, buf.length);</span><br><span class="line">                    dos.flush();</span><br><span class="line">                    Log.d(TAG, &quot;socket send=&gt;content:&quot; + content);</span><br><span class="line"></span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    Log.d(TAG, &quot;send exception=&gt;&quot; + e.getMessage());</span><br><span class="line">                &#125;catch (Exception e)</span><br><span class="line">                &#123;</span><br><span class="line">                    Log.d(TAG, &quot;send exception=&gt;&quot; + e.getMessage());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通信过程中，如果服务端socket异常关闭，客户端将会出现各种异常崩溃，<br>所以socket编程中对于异常的捕获处理也很重要，<br>这里我直接捕获异常，没做处理，是因为产品需求上逻辑，<br>最后都会调用close方法，释放socket链接。<br>不同的业务需求有不同的处理方法。</p>
+<h2 id="Socket开发中可能遇到的问题"><a href="#Socket开发中可能遇到的问题" class="headerlink" title="Socket开发中可能遇到的问题"></a>Socket开发中可能遇到的问题</h2><ol>
+<li><p>socket通信请放在工作线程中，如果通信频率很高，最好使用线程池来管理</p>
+</li>
+<li><p>当socket长连接建立成功后，如果手机屏幕关闭，只要过很短的时间，<br>android系统就会将socket服务挂起，这种行为应该是出于节电考虑的，<br>但体验会下去很多，因为总是自动断开。<br>另外当我们的手机通过数据线连接电脑调试的时候，<br>手机熄灭屏幕后，socket服务是不会被自动挂起的，<br>似乎在调试模式下，手机不会自动进入节电模式，<br>但当连接数据线充电的的话，手机在熄屏后还是会将socket服务挂起的。<br>如果希望手机在熄屏后不将socket服务挂起，可以通过PowerManager设置电源模式，<br>使cpu不进入节电模式，当然了，可以做个计时器，<br>也别让cpu全马力输出太久（这点未验证过，以后业务上遇到再研究）</p>
+</li>
+<li><p>两端可以协商好使用心跳包来确认双方是否存活（短链接可能没必要）</p>
+</li>
+<li><p><strong>自动拆包问题</strong>。在发送数据时如果发送的数据被转化为byte后，<br>长度超过1448时，发送的数据将被拆分。<br>解决自动拆包问题，一是约定好数据包长度，二是在数据包里面写入信息的总长度，<br>比如，可以将发送的第一位设置为“$”，表示数据的开头，<br>接下来后四位用来存放数据的总长度，之后的部分用来存放发送数据，<br>这样，接收端在接收到数据后就可以通过解析出数据的总长度来确认是否已经接收完全，<br>如果不全再继续接收即可。（关于TCP和1448，可以参考<a href="http://enyuxuexi.blog.chinaunix.net/uid-29075379-id-3920264.html" target="_blank" rel="noopener">传送门</a>）</p>
+</li>
+<li><p><strong>自动粘包问题</strong>。发送数据过长时会有自动拆包的问题，<br>当发送数据过短或者发送的数据之间时间间隔很短的时候，还会发生自动粘包的问题。<br>自动粘包就是指本来是两个或者多个包中的数据同时合并到了一个包中，<br>这时候，容易出现解析不全的情况。<br>解决粘包问题同样可以使用上面提到的方法，只不过反过来了，<br>当发现接收到的数据比通过首部一至五位计算出的长度要长时，<br>可以通过截取的方法，分段计算。</p>
+</li>
+<li><p>别以为自动拆包和自动粘包是互斥的，它们也有可能同时出现。<br>首先发生粘包，而粘包的长度超过了1448，然后就会发生拆包。<br>处理方法也不难，接收端首先处理粘包，<br>当处理到最后一个包时会发现最后一个包不完整，将他保存下来，<br>与接下来接收到的数据进行拼接，然后接续处理粘包就可以了，<br>调用流程就是：处理粘包、处理拆包、处理粘包。。。就可以了。</p>
+</li>
+</ol>
+<p>后续遇到问题再补充。。。   </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/socket/" rel="tag"># socket</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/04/动画/" rel="next" title="动画">
+                <i class="fa fa-chevron-left"></i> 动画
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="threetree" />
+            
+              <p class="site-author-name" itemprop="name">threetree</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#socket编程"><span class="nav-number">1.</span> <span class="nav-text">socket编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Socket开发中可能遇到的问题"><span class="nav-number">2.</span> <span class="nav-text">Socket开发中可能遇到的问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">threetree</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
