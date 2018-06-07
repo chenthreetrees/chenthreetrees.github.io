@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="threetrees, android, 三木" />
+  <meta name="keywords" content="Android,崩溃," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="老狗不是一条狗，老狗是狗子他爸，狗子当然也不是狗。村里的人叫惯了，叫唤起来亲切，但是后来，狗子他妈说，你这没出息的，你这辈子就是条狗。然后，狗子他妈就走了，从通向城市的村口走出去了，留下背后一双充满不解和茫然的狗子的眼。后来很长一段时间，狗子就经常坐在土丘上望着村口出神。">
+<meta name="description" content="Android的异常和闪退，大部分时候我们还是希望有一个统一的地方进行捕获和处理，比如在异常的时候重启。Android提供了我们自定义捕获的思路，首先继承UncaughtExceptionHandler，通过thread.setDefaullUncaughtExceptionHandler 将本类设置为app默认的UncaughtException处理类重写 UncaughtException如果">
+<meta name="keywords" content="Android,崩溃">
 <meta property="og:type" content="article">
-<meta property="og:title" content="老狗和狗子">
-<meta property="og:url" content="http://chenthreetrees.github.io/2018/06/04/狗子-1/index.html">
+<meta property="og:title" content="Android崩溃捕获结合腾讯bugly">
+<meta property="og:url" content="http://chenthreetrees.github.io/2018/06/06/崩溃捕获/index.html">
 <meta property="og:site_name" content="三木">
-<meta property="og:description" content="老狗不是一条狗，老狗是狗子他爸，狗子当然也不是狗。村里的人叫惯了，叫唤起来亲切，但是后来，狗子他妈说，你这没出息的，你这辈子就是条狗。然后，狗子他妈就走了，从通向城市的村口走出去了，留下背后一双充满不解和茫然的狗子的眼。后来很长一段时间，狗子就经常坐在土丘上望着村口出神。">
+<meta property="og:description" content="Android的异常和闪退，大部分时候我们还是希望有一个统一的地方进行捕获和处理，比如在异常的时候重启。Android提供了我们自定义捕获的思路，首先继承UncaughtExceptionHandler，通过thread.setDefaullUncaughtExceptionHandler 将本类设置为app默认的UncaughtException处理类重写 UncaughtException如果">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-04T09:31:36.177Z">
+<meta property="og:updated_time" content="2018-06-07T07:08:59.706Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="老狗和狗子">
-<meta name="twitter:description" content="老狗不是一条狗，老狗是狗子他爸，狗子当然也不是狗。村里的人叫惯了，叫唤起来亲切，但是后来，狗子他妈说，你这没出息的，你这辈子就是条狗。然后，狗子他妈就走了，从通向城市的村口走出去了，留下背后一双充满不解和茫然的狗子的眼。后来很长一段时间，狗子就经常坐在土丘上望着村口出神。">
+<meta name="twitter:title" content="Android崩溃捕获结合腾讯bugly">
+<meta name="twitter:description" content="Android的异常和闪退，大部分时候我们还是希望有一个统一的地方进行捕获和处理，比如在异常的时候重启。Android提供了我们自定义捕获的思路，首先继承UncaughtExceptionHandler，通过thread.setDefaullUncaughtExceptionHandler 将本类设置为app默认的UncaughtException处理类重写 UncaughtException如果">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://chenthreetrees.github.io/2018/06/04/狗子-1/"/>
+  <link rel="canonical" href="http://chenthreetrees.github.io/2018/06/06/崩溃捕获/"/>
 
 
 
 
 
-  <title>老狗和狗子 | 三木</title>
+  <title>Android崩溃捕获结合腾讯bugly | 三木</title>
   
 
 
@@ -252,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://chenthreetrees.github.io/2018/06/04/狗子-1/">
+    <link itemprop="mainEntityOfPage" href="http://chenthreetrees.github.io/2018/06/06/崩溃捕获/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="threetree">
@@ -269,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">老狗和狗子</h1>
+          <h1 class="post-title" itemprop="name headline">Android崩溃捕获结合腾讯bugly</h1>
         
 
         <div class="post-meta">
@@ -281,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-04T17:11:03+08:00">
-                2018-06-04
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T16:59:27+08:00">
+                2018-06-06
               </time>
             
 
@@ -311,8 +312,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/写作/" itemprop="url" rel="index">
-                    <span itemprop="name">写作</span>
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
                   </a>
                 </span>
 
@@ -322,8 +323,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/写作/狗子/" itemprop="url" rel="index">
-                    <span itemprop="name">狗子</span>
+                  <a href="/categories/Android/优化/" itemprop="url" rel="index">
+                    <span itemprop="name">优化</span>
                   </a>
                 </span>
 
@@ -359,14 +360,10 @@
       
 
       
-        <p>老狗不是一条狗，老狗是狗子他爸，狗子当然也不是狗。<br>村里的人叫惯了，叫唤起来亲切，但是后来，狗子他妈说，你这没出息的，你这辈子就是条狗。<br>然后，狗子他妈就走了，从通向城市的村口走出去了，留下背后一双充满不解和茫然的狗子的眼。<br>后来很长一段时间，狗子就经常坐在土丘上望着村口出神。<br><a id="more"></a></p>
-<p>老狗是喜欢狗子他妈的，不明白她为什么要离开。<br>打那以后，他爱上了抽烟，点燃一根根烟，很享受的吞吐，迷茫的眼神透过朦胧的烟雾就像要把生活看破个洞。<br>老狗常常坐在镜子面前想狗子他妈，直到有一天，<br>发现镜子一片空白，他先是害怕，然后抓狂，他觉得自己是读过书的，懂科学的。</p>
-<p>有那么些日子，村里的人说老狗疯了。<br>老狗见人就说他把魂丢了，甚至后来村里的姑娘都害怕了，遇到姑娘就说，真正的离开是没有告别的。<br>在一个风和日丽的下午，狗子他妈裹了件最常穿的大衣，出了村口，然后就再也没有回来过。</p>
-<p>阳光明媚的一天，老狗想到了影子传说，会心一笑，还好它还在，还好还活在阳光下。<br>有两个读书人走过说，老狗是疯子，疯子好帅。<br>于是，老狗疯狂的跑回家，看着墙上的镜子，还是照不出自己，顿时怒火攻心，<br>抓起椅子扔了过去，大哭，哭的很伤心，狗子他妈，我他妈的就是不帅。<br>玻璃碎了一地，老狗看着透明的玻璃，跑向了村口。</p>
-<p>有一段时间，狗子脸上总洋溢着幸福，因为学校的老师唤他姓名了。<br>后来就没去上学，因为阿妈离开他，他就离开学校。<br>他甚至认为父亲欠母亲一个发泄，他跑回家。</p>
-<p>家里空荡荡，房间里刷白的墙壁上有一面镜子。<br>他记得阿妈喜欢坐在那里看镜子里的自己，而他总是微笑，依偎在阿妈怀里。<br>有一次阿妈问狗子她美不美，美，他天真的答，只是没有看到她眼神里的一丝失落。<br>狗子往镜子面前一坐，想起了阿妈。<br>他记得更小的时候，又一次放课回来，<br>向对着镜子的阿妈抱怨没有鞋子，想要一双，阿妈就给他买了一双。<br>阿妈每天都会送他上学，他穿上鞋就已经在路上，<br>身后是阿妈的声音，玩累了记得回家。<br>阿妈还说，要喜欢同学，要爱老师，他不懂，<br>阿妈又说，喜欢是淡淡的爱，爱是深深的喜欢，他还是不懂，<br>但他说，他爱阿妈。<br>后来，阿妈再没和狗子说什么就走了，永远没回来，<br>他就不喜欢同学，不爱老师了。</p>
-<p>面对镜子，看着自己瘦弱的身躯，没有了微笑，<br>一个拳头把镜子打成七八烂，末了骂了句，<br>他妈的老狗会打狗子的，于是，<br>他找来了一块差不多大小的透明玻璃装了上去，然后跑到村口，出神的望。</p>
-<p>那一天，村里的人都说村口有一条老狗疯狂的追着一条小狗。</p>
+        <p>Android的异常和闪退，大部分时候我们还是希望有一个统一的地方进行捕获和处理，比如在异常的时候重启。<br>Android提供了我们自定义捕获的思路，首先继承UncaughtExceptionHandler，<br>通过thread.setDefaullUncaughtExceptionHandler 将本类设置为app默认的UncaughtException处理类<br>重写 UncaughtException如果用户没有处理，默认让系统处理（也可以是接入第三方bug管理库，比如bugly）<br>记得在app的applacation中初始化这个类。<br><a id="more"></a><br>javacode如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">public class CrashHandler implements Thread.UncaughtExceptionHandler &#123;</span><br><span class="line"></span><br><span class="line">    private Thread.UncaughtExceptionHandler mDefaultUncaughtExceptionHandler;</span><br><span class="line"></span><br><span class="line">    public static CrashHandler getInstance() &#123;</span><br><span class="line">        return CrashHandlerHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static class CrashHandlerHolder &#123;</span><br><span class="line">        static final CrashHandler INSTANCE = new CrashHandler();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private CrashHandler() &#123; &#125;</span><br><span class="line">	</span><br><span class="line">	/*</span><br><span class="line">     * 弹出解决方案之后把崩溃继续交给系统处理，</span><br><span class="line">     * 所以保存当前UncaughtExceptionHandler用于崩溃发生时使用。</span><br><span class="line">     */</span><br><span class="line">    public void init() &#123;</span><br><span class="line">      </span><br><span class="line">        mDefaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();</span><br><span class="line">        Thread.setDefaultUncaughtExceptionHandler(this);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">     * 当UncaughtException发生时会转入该函数来处理</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void uncaughtException(Thread thread, Throwable ex)</span><br><span class="line">    &#123;</span><br><span class="line">		if (!handleException(ex) &amp;&amp; mDefaultHandler != null) &#123;</span><br><span class="line">		 // 如果用户没有处理则让系统默认的异常处理器来处理(如果使用bugly，这里将会把异常传递给bugly去处理)</span><br><span class="line">        mDefaultUncaughtExceptionHandler.uncaughtException(thread, ex);</span><br><span class="line">		&#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">      /**</span><br><span class="line">     * 自定义错误处理,</span><br><span class="line">     * </span><br><span class="line">     * @param ex</span><br><span class="line">     * @return true:如果处理了该异常信息;否则返回false.</span><br><span class="line">     */</span><br><span class="line">    private boolean handleException(Throwable ex) &#123;</span><br><span class="line">        if (ex == null) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        //重启应用等操作</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>在application里初始化：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">      //偶发性bug导致APP崩溃，APP可能会直接闪退或者白屏，</span><br><span class="line">      //我们可以在application中捕获到全局异常，然后再进行处理</span><br><span class="line">//顺序很重要，一定要在bugly前面初始化</span><br><span class="line">      CrashHandler.getInstance().init();</span><br><span class="line">//腾讯bug统计解决方案bugly，初始化</span><br><span class="line">      CrashReport.initCrashReport(mApplication, &quot;appkey&quot;, true);</span><br></pre></td></tr></table></figure></p>
+<p><strong>bugly<a href="https://bugly.qq.com/docs/user-guide/instruction-manual-android/?v=20180521124306" target="_blank" rel="noopener">传送门</a></strong></p>
 
       
     </div>
@@ -382,6 +379,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/崩溃/" rel="tag"># 崩溃</a>
+          
+        </div>
+      
 
       
       
@@ -391,8 +396,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/04/color/" rel="next" title="常用颜色">
-                <i class="fa fa-chevron-left"></i> 常用颜色
+              <a href="/2018/06/05/青春/" rel="next" title="青春">
+                <i class="fa fa-chevron-left"></i> 青春
               </a>
             
           </div>
@@ -401,8 +406,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/04/动画/" rel="prev" title="动画">
-                动画 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/07/字体库/" rel="prev" title="Android第三方字体库使用">
+                Android第三方字体库使用 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
