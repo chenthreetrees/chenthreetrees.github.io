@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="三木">
 <meta property="og:description" content="该篇主要收集Android学习资料和技术文档记录Android开发过程中的一些小技巧，代码片段，方便快速开发，提高效率  学习资料技术文档代码速查xmlbutton常用点击效果：1234567&amp;lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&amp;gt;&amp;lt;item android:state_press">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-04T09:41:39.637Z">
+<meta property="og:updated_time" content="2018-06-08T09:45:47.411Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="三木">
 <meta name="twitter:description" content="该篇主要收集Android学习资料和技术文档记录Android开发过程中的一些小技巧，代码片段，方便快速开发，提高效率  学习资料技术文档代码速查xmlbutton常用点击效果：1234567&amp;lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&amp;gt;&amp;lt;item android:state_press">
@@ -219,6 +219,16 @@
           </a>
         </li>
       
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
 
       
     </ul>
@@ -263,22 +273,8 @@
 <h2 id="学习资料"><a href="#学习资料" class="headerlink" title="学习资料"></a>学习资料</h2><h2 id="技术文档"><a href="#技术文档" class="headerlink" title="技术文档"></a>技术文档</h2><h2 id="代码速查"><a href="#代码速查" class="headerlink" title="代码速查"></a>代码速查</h2><h3 id="xml"><a href="#xml" class="headerlink" title="xml"></a>xml</h3><p><strong>button常用点击效果：</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;selector xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span><br><span class="line">&lt;item android:state_pressed=<span class="string">"true"</span></span><br><span class="line">      android:drawable=<span class="string">"@drawable/btn_login_press"</span>/&gt; &lt;!-- pressed --&gt;</span><br><span class="line">&lt;item android:state_focused=<span class="string">"true"</span></span><br><span class="line">      android:drawable=<span class="string">"@drawable/btn_login_press"</span>/&gt; &lt;!-- focused --&gt;</span><br><span class="line">&lt;item android:drawable=<span class="string">"@drawable/btn_login_mornal"</span>/&gt; &lt;!-- default --&gt;</span><br><span class="line">&lt;/selector&gt;</span><br></pre></td></tr></table></figure></p>
 <p><strong>styles.xml文件下的一些常用样式：</strong><br>dialog常用样式：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;style name=<span class="string">"my_dialog"</span>&gt;</span><br><span class="line">       &lt;!-- 是否有边框 --&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowFrame"</span>&gt;@null&lt;/item&gt;</span><br><span class="line">       &lt;!--是否在悬浮Activity之上  --&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowIsFloating"</span>&gt;<span class="literal">true</span>&lt;/item&gt;</span><br><span class="line">       &lt;!-- 标题 --&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowNoTitle"</span>&gt;<span class="literal">true</span>&lt;/item&gt;</span><br><span class="line">       &lt;!--阴影  --&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowIsTranslucent"</span>&gt;<span class="literal">true</span>&lt;/item&gt;&lt;!--半透明--&gt;</span><br><span class="line">       &lt;!--背景透明--&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowBackground"</span>&gt;@android:color/transparent&lt;/item&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:backgroundDimEnabled"</span>&gt;<span class="literal">true</span>&lt;/item&gt;</span><br><span class="line">   &lt;/style&gt;</span><br></pre></td></tr></table></figure></p>
 <p>欢迎页，如果带大图当背景：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;style name=<span class="string">"WelcomeStyle"</span> parent=<span class="string">"MarioTheme"</span>&gt;</span><br><span class="line">       &lt;!-- 隐藏Activity窗口的ActionBar --&gt;</span><br><span class="line">       &lt;item name=<span class="string">"windowActionBar"</span>&gt;<span class="literal">false</span>&lt;/item&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowNoTitle"</span>&gt;<span class="literal">true</span>&lt;/item&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowFullscreen"</span>&gt;<span class="literal">true</span>&lt;/item&gt;</span><br><span class="line">       &lt;item name=<span class="string">"android:windowBackground"</span>&gt;@drawable/img_welcome&lt;/item&gt;</span><br><span class="line">   &lt;/style&gt;</span><br></pre></td></tr></table></figure></p>
-<p><strong>listview一些重要属性：</strong></p>
-<pre><code class="bash">//用ListView或者其它显示大量Items的控件实时跟踪或者查看信息,
-//希望最新的条目可以自动滚动到可视范围内。
-//通过设置的控件transcriptMode属性可以将
-//Android平台的控件（支持ScrollBar）自动滑动到最底部
-android:transcriptMode=<span class="string">"alwaysScroll"</span>   
-android:cacheColorHint=<span class="string">"#00000000"</span>
-android:listSelector=<span class="string">"@color/pink"</span> listView item 选中时的颜色。
-android:divider=<span class="string">"#f9b68b"</span>  //分割线颜色
-android:divider=<span class="string">"@drawable/@null"</span> //不想显示分割线
-android:dividerHeight=<span class="string">"1dp"</span>  //分割线边距
-android:scrollbars=<span class="string">"none"</span>  //setVerticalScrollBarEnabled(<span class="literal">true</span>);不显示滚动条
-android:fadeScrollbars=<span class="string">"true"</span>//设置为<span class="literal">true</span>就可以实现滚动条的自动隐藏和显示
-android:fadingEdge=<span class="string">"none"</span>   去掉上边和下边黑色的阴影     
-android:fastScrollEnabled = <span class="string">"true"</span> //加快滑动速度
-</code></pre>
+<p><strong>listview一些重要属性：</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//用ListView或者其它显示大量Items的控件实时跟踪或者查看信息,</span><br><span class="line">//希望最新的条目可以自动滚动到可视范围内。</span><br><span class="line">//通过设置的控件transcriptMode属性可以将</span><br><span class="line">//Android平台的控件（支持ScrollBar）自动滑动到最底部</span><br><span class="line">android:transcriptMode=<span class="string">"alwaysScroll"</span>   </span><br><span class="line">android:cacheColorHint=<span class="string">"#00000000"</span></span><br><span class="line">android:listSelector=<span class="string">"@color/pink"</span> listView item 选中时的颜色。</span><br><span class="line">android:divider=<span class="string">"#f9b68b"</span>  //分割线颜色</span><br><span class="line">android:divider=<span class="string">"@drawable/@null"</span> //不想显示分割线</span><br><span class="line">android:dividerHeight=<span class="string">"1dp"</span>  //分割线边距</span><br><span class="line">android:scrollbars=<span class="string">"none"</span>  //setVerticalScrollBarEnabled(<span class="literal">true</span>);不显示滚动条</span><br><span class="line">android:fadeScrollbars=<span class="string">"true"</span>//设置为<span class="literal">true</span>就可以实现滚动条的自动隐藏和显示</span><br><span class="line">android:fadingEdge=<span class="string">"none"</span>   去掉上边和下边黑色的阴影     </span><br><span class="line">android:fastScrollEnabled = <span class="string">"true"</span> //加快滑动速度</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line"><span class="comment">### 代码片段</span></span><br><span class="line">**生成二维码去白边**</span><br></pre></td></tr></table></figure></p>
+<p> // 创建二维码<br>    public static Bitmap createQRBitmap(String str, int width, int height, int color, int bgColor) throws WriterException<br>    {<br>        // 用于设置QR二维码参数<br>        Hashtable&lt;EncodeHintType, Object&gt; qrParam = new Hashtable&lt;EncodeHintType, Object&gt;();<br>        // 设置QR二维码的纠错级别——这里选择最高H级别<br>        qrParam.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);<br>        // 设置编码方式<br>        qrParam.put(EncodeHintType.CHARACTER_SET, “utf-8”);<br>        // 设置最小空白边框<br>        qrParam.put(EncodeHintType.MARGIN, 1);<br>        //<br>        BitMatrix matrix = new QRCodeWriter().encode(str, BarcodeFormat.QR_CODE, width, height, qrParam);<br>        int[] pixels = new int[width <em> height];<br>        boolean first = false;<br>        for (int y = 0; y &lt; height; y++) {<br>            for (int x = 0; x &lt; width; x++) {<br>                if (matrix.get(x, y)) {<br>                    if (!first) {<br>                        first = true;<br>                        // 记录第一次二维码像素点距离边界的距离，这个距离就是白边的距离<br>                        offset = y;<br>                    }<br>                    pixels[y </em> width + x] = color;<br>                } else {<br>                    pixels[y * width + x] = bgColor;<br>                }<br>            }<br>        }<br>        Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_4444);<br>        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);<br>        return bitmap;<br>    }<br><code>`</code></p>
 
         
       </div>
@@ -350,7 +346,7 @@ android:fastScrollEnabled = <span class="string">"true"</span> //加快滑动速
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
