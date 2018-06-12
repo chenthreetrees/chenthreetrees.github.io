@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,权限," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Android 6.0（API 23）及其以上需要动态申请权限首先，需要在AndroidManifest.xml静态申请权限，否则无法动态申请权限">
+<meta name="keywords" content="Android,权限">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动态权限">
+<meta property="og:url" content="http://chenthreetrees.github.io/2018/06/12/动态权限/index.html">
+<meta property="og:site_name" content="三木">
+<meta property="og:description" content="Android 6.0（API 23）及其以上需要动态申请权限首先，需要在AndroidManifest.xml静态申请权限，否则无法动态申请权限">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-12T08:34:57.035Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="动态权限">
+<meta name="twitter:description" content="Android 6.0（API 23）及其以上需要动态申请权限首先，需要在AndroidManifest.xml静态申请权限，否则无法动态申请权限">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://chenthreetrees.github.io/2018/06/12/动态权限/"/>
+
+
+
+
+
+  <title>动态权限 | 三木</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">三木</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">自从当年我背井离乡，乡里人就没喝过一口水</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-android">
+          <a href="/android/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-android"></i> <br />
+            
+            Android
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://chenthreetrees.github.io/2018/06/12/动态权限/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="threetree">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三木">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">动态权限</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-12T14:47:44+08:00">
+                2018-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+		  
+		  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+			</script>
+			
+				<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv">
+				</span> 次</span>
+			
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/权限/" itemprop="url" rel="index">
+                    <span itemprop="name">权限</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Android 6.0（API 23）及其以上需要动态申请权限<br>首先，需要在AndroidManifest.xml静态申请权限，否则无法动态申请权限<br><a id="more"></a><br><strong>注意：如果应用程序请求在AndroidManifest中列出的危险权限，<br>并且应用程序已经在同一权限组中具有另一个危险权限，<br>系统会立即授予权限，而不会与用户进行任何交互。<br>例如，如果一个应用程序先前已经请求并被授予READ_CONTACTS权限，<br>然后它请求WRITE_CONTACTS(同属于联系人一组)，<br>系统会立即授予该权限，不会再弹出权限授予询问的对话框。</strong></p>
+<h2 id="需要用户手动赋予的权限（-Dangerous-Permissions）"><a href="#需要用户手动赋予的权限（-Dangerous-Permissions）" class="headerlink" title="需要用户手动赋予的权限（ Dangerous Permissions）"></a>需要用户手动赋予的权限（ Dangerous Permissions）</h2><table>
+<thead>
+<tr>
+<th>所属权限组</th>
+<th>权限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日历</td>
+<td>READ_CALENDAR</td>
+</tr>
+<tr>
+<td>日历</td>
+<td>WRITE_CALENDAR</td>
+</tr>
+<tr>
+<td>相机</td>
+<td>CAMERA</td>
+</tr>
+<tr>
+<td>联系人</td>
+<td>READ_CONTACTS</td>
+</tr>
+<tr>
+<td>联系人</td>
+<td>WRITE_CONTACTS</td>
+</tr>
+<tr>
+<td>联系人</td>
+<td>GET_ACCOUNTS</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>ACCESS_FINE_LOCATION</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>ACCESS_COARSE_LOCATION</td>
+</tr>
+<tr>
+<td>麦克风</td>
+<td>RECORD_AUDIO</td>
+</tr>
+<tr>
+<td>电话</td>
+<td>READ_PHONE_STATE</td>
+</tr>
+<tr>
+<td>电话</td>
+<td>CALL_PHONE</td>
+</tr>
+<tr>
+<td>电话</td>
+<td>READ_CALL_LOG</td>
+</tr>
+<tr>
+<td>电话</td>
+<td>WRITE_CALL_LOG</td>
+</tr>
+<tr>
+<td>电话</td>
+<td>ADD_VOICEMAIL</td>
+</tr>
+<tr>
+<td>电话</td>
+<td>USE_SIP</td>
+</tr>
+<tr>
+<td>电话</td>
+<td>PROCESS_OUTGOING_CALLS</td>
+</tr>
+<tr>
+<td>传感器</td>
+<td>BODY_SENSORS</td>
+</tr>
+<tr>
+<td>短信</td>
+<td>SEND_SMS</td>
+</tr>
+<tr>
+<td>短信</td>
+<td>RECEIVE_SMS</td>
+</tr>
+<tr>
+<td>短信</td>
+<td>READ_SMS</td>
+</tr>
+<tr>
+<td>短信</td>
+<td>RECEIVE_WAP_PUSH</td>
+</tr>
+<tr>
+<td>短信</td>
+<td>RECEIVE_MMS</td>
+</tr>
+<tr>
+<td>存储</td>
+<td>READ_EXTERNAL_STORAGE</td>
+</tr>
+<tr>
+<td>存储</td>
+<td>WRITE_EXTERNAL_STORAGE</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;uses-permission android:name=&quot;android.permission.上表的权限字符&quot; |&gt;</code> 放在 <code>&lt;application&gt;</code>标签之上</p>
+<h2 id="代码封装"><a href="#代码封装" class="headerlink" title="代码封装"></a>代码封装</h2><p><strong>权限检测</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 检查权限的工具类</span><br><span class="line"> * &lt;p/&gt;</span><br><span class="line"> * Created by wangchenlong on 16/1/26.</span><br><span class="line"> */</span><br><span class="line">public class PermissionsChecker &#123;</span><br><span class="line">	private final Context mContext;</span><br><span class="line"></span><br><span class="line">	public PermissionsChecker(Context context) &#123;</span><br><span class="line">		mContext = context.getApplicationContext();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 判断权限集合</span><br><span class="line">	public boolean lacksPermissions(String... permissions) &#123;</span><br><span class="line">		for (String permission : permissions) &#123;</span><br><span class="line">			if (lacksPermission(permission)) &#123;</span><br><span class="line">				return true;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 判断是否缺少权限</span><br><span class="line">	private boolean lacksPermission(String permission) &#123;</span><br><span class="line">		return ContextCompat.checkSelfPermission(mContext, permission) ==</span><br><span class="line">				PackageManager.PERMISSION_DENIED;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>权限获取页面</strong><br>activity_permissions.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;View</span><br><span class="line">    android:id=&quot;@+id/image&quot;</span><br><span class="line">    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot;</span><br><span class="line">    android:layout_weight=&quot;1&quot;</span><br><span class="line">    android:adjustViewBounds=&quot;true&quot;</span><br><span class="line">    android:background=&quot;#88888888&quot;</span><br><span class="line">    android:contentDescription=&quot;@null&quot;/&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 权限获取页面</span><br><span class="line"> * &lt;p/&gt;</span><br><span class="line"> * Created by threetrees on 16/12/1.</span><br><span class="line"> */</span><br><span class="line">public class PermissionsActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line">	public static final int PERMISSIONS_GRANTED = 0; // 权限授权</span><br><span class="line">	public static final int PERMISSIONS_DENIED = 1; // 权限拒绝</span><br><span class="line"></span><br><span class="line">	private static final int PERMISSION_REQUEST_CODE = 0; // 系统权限管理页面的参数</span><br><span class="line">	private static final String EXTRA_PERMISSIONS = &quot;permission&quot;; // 权限参数</span><br><span class="line">	private static final String PACKAGE_URL_SCHEME = &quot;package:&quot;; // 方案</span><br><span class="line"></span><br><span class="line">	private PermissionsChecker mChecker; // 权限检测器</span><br><span class="line">	private boolean isRequireCheck; // 是否需要系统权限检测</span><br><span class="line"></span><br><span class="line">	// 启动当前权限页面的公开接口</span><br><span class="line">	public static void startActivityForResult(Activity activity, int requestCode, String... permissions) &#123;</span><br><span class="line">		Intent intent = new Intent(activity, PermissionsActivity.class);</span><br><span class="line">		intent.putExtra(EXTRA_PERMISSIONS, permissions);</span><br><span class="line">		ActivityCompat.startActivityForResult(activity, intent, requestCode, null);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 启动当前权限页面的公开接口</span><br><span class="line">	public static void startActivityForResult(Fragment fragment, int requestCode, String... permissions) &#123;</span><br><span class="line">		Intent intent = new Intent(fragment.getActivity(), PermissionsActivity.class);</span><br><span class="line">		intent.putExtra(EXTRA_PERMISSIONS, permissions);</span><br><span class="line">		fragment.startActivityForResult(intent, requestCode);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override protected void onCreate(@Nullable Bundle savedInstanceState) &#123;</span><br><span class="line">		super.onCreate(savedInstanceState);</span><br><span class="line">		if (getIntent() == null || !getIntent().hasExtra(EXTRA_PERMISSIONS)) &#123;</span><br><span class="line">			throw new RuntimeException(&quot;PermissionsActivity需要使用静态startActivityForResult方法启动!&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">		setContentView(R.layout.activity_permissions);</span><br><span class="line"></span><br><span class="line">		mChecker = new PermissionsChecker(this);</span><br><span class="line">		isRequireCheck = true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override protected void onResume() &#123;</span><br><span class="line">		super.onResume();</span><br><span class="line">		if (isRequireCheck) &#123;</span><br><span class="line">			String[] permissions = getPermissions();</span><br><span class="line">			if (mChecker.lacksPermissions(permissions)) &#123;</span><br><span class="line">				requestPermissions(permissions); // 请求权限</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				allPermissionsGranted(); // 全部权限都已获取</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			isRequireCheck = true;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 返回传递的权限参数</span><br><span class="line">	private String[] getPermissions() &#123;</span><br><span class="line">		return getIntent().getStringArrayExtra(EXTRA_PERMISSIONS);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 请求权限兼容低版本</span><br><span class="line">	private void requestPermissions(String... permissions) &#123;</span><br><span class="line">		ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 全部权限均已获取</span><br><span class="line">	private void allPermissionsGranted() &#123;</span><br><span class="line">		setResult(PERMISSIONS_GRANTED);</span><br><span class="line">		finish();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 用户权限处理,</span><br><span class="line">	 * 如果全部获取, 则直接过.</span><br><span class="line">	 * 如果权限缺失, 则提示Dialog.</span><br><span class="line">	 *</span><br><span class="line">	 * @param requestCode  请求码</span><br><span class="line">	 * @param permissions  权限</span><br><span class="line">	 * @param grantResults 结果</span><br><span class="line">	 */</span><br><span class="line">	@Override</span><br><span class="line">	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) &#123;</span><br><span class="line">		if (requestCode == PERMISSION_REQUEST_CODE &amp;&amp; hasAllPermissionsGranted(grantResults)) &#123;</span><br><span class="line">			isRequireCheck = true;</span><br><span class="line">			allPermissionsGranted();</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			isRequireCheck = false;</span><br><span class="line">			showMissingPermissionDialog();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 含有全部的权限</span><br><span class="line">	private boolean hasAllPermissionsGranted(@NonNull int[] grantResults) &#123;</span><br><span class="line">		for (int grantResult : grantResults) &#123;</span><br><span class="line">			if (grantResult == PackageManager.PERMISSION_DENIED) &#123;</span><br><span class="line">				return false;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 显示缺失权限提示</span><br><span class="line">	private void showMissingPermissionDialog() &#123;</span><br><span class="line">		AlertDialog.Builder builder = new AlertDialog.Builder(PermissionsActivity.this);</span><br><span class="line">		builder.setTitle(&quot;帮助&quot;);</span><br><span class="line">		builder.setMessage(&quot;当前应用缺少必要权限，请点击&apos;设置&apos;-&apos;权限&apos;-打开所需权限。&quot;);</span><br><span class="line"></span><br><span class="line">		// 拒绝, 退出应用</span><br><span class="line">		builder.setNegativeButton(&quot;退出&quot;, new DialogInterface.OnClickListener() &#123;</span><br><span class="line">			@Override public void onClick(DialogInterface dialog, int which) &#123;</span><br><span class="line">				setResult(PERMISSIONS_DENIED);</span><br><span class="line">				finish();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">		builder.setPositiveButton(&quot;设置&quot;, new DialogInterface.OnClickListener() &#123;</span><br><span class="line">			@Override public void onClick(DialogInterface dialog, int which) &#123;</span><br><span class="line">				startAppSettings();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">		builder.show();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 启动应用的设置</span><br><span class="line">	private void startAppSettings() &#123;</span><br><span class="line">		Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);</span><br><span class="line">		intent.setData(Uri.parse(PACKAGE_URL_SCHEME + getPackageName()));</span><br><span class="line">		startActivity(intent);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>在需要申请权限的页面使用</strong></p>
+<p>定义权限参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">private static final int REQUEST_CODE = 0; // 请求码</span><br><span class="line">private boolean hasPermissions = true;//权限申请标志,可以在onResume()用此标志来判断是否需要申请权限逻辑</span><br><span class="line">   private PermissionsChecker mPermissionsChecker; // 权限检测器</span><br><span class="line">   // 所需的全部权限</span><br><span class="line">   static final String[] PERMISSIONS = new String[]&#123;Manifest.permission.WRITE_EXTERNAL_STORAGE,</span><br><span class="line">           Manifest.permission.READ_EXTERNAL_STORAGE,</span><br><span class="line">           Manifest.permission.CAMERA</span><br><span class="line">           &#125;;</span><br></pre></td></tr></table></figure></p>
+<p>在Oncreate()等地方初始化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">	mPermissionsChecker = new PermissionsChecker(mActivity);</span><br><span class="line">// 缺少权限时, 进入权限配置页面</span><br><span class="line">        if (Build.VERSION.SDK_INT &gt;= 23 &amp;&amp; mPermissionsChecker.lacksPermissions(PERMISSIONS)) &#123;</span><br><span class="line">            PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>处理权限申请结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">  public void onActivityResult(int requestCode, int resultCode, Intent data)</span><br><span class="line">  &#123;</span><br><span class="line">      super.onActivityResult(requestCode, resultCode, data);</span><br><span class="line">      if (requestCode == REQUEST_CODE &amp;&amp; resultCode == PermissionsActivity.PERMISSIONS_DENIED) &#123;</span><br><span class="line">          hasPermissions = false;</span><br><span class="line">	//没有申请权限，这里做一些逻辑处理，比如退出应用</span><br><span class="line">      &#125;else if(requestCode == REQUEST_CODE &amp;&amp; resultCode == PermissionsActivity.PERMISSIONS_GRANTED)</span><br><span class="line">&#123;</span><br><span class="line">	hasPermissions = true;</span><br><span class="line">&#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/权限/" rel="tag"># 权限</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/11/dialog/" rel="next" title="DialogFragment封装">
+                <i class="fa fa-chevron-left"></i> DialogFragment封装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="threetree" />
+            
+              <p class="site-author-name" itemprop="name">threetree</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#需要用户手动赋予的权限（-Dangerous-Permissions）"><span class="nav-number">1.</span> <span class="nav-text">需要用户手动赋予的权限（ Dangerous Permissions）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码封装"><span class="nav-number">2.</span> <span class="nav-text">代码封装</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">threetree</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
