@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,webview," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="现在混合开发的框架越来越多，混合开发也成为主流，这里封装下android自带的webview，让后续开发更具通用性 封装思路：1-提供web页面的头部可配置2-实现android与js互相调用 web页面头部通用布局如下： xml如下：1234567891011121314151617181920212223242526272829303132333435363738394041424344454">
+<meta name="keywords" content="Android,webview">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android和js的混合开发">
+<meta property="og:url" content="http://chenthreetrees.github.io/2018/06/13/webview封装/index.html">
+<meta property="og:site_name" content="三木">
+<meta property="og:description" content="现在混合开发的框架越来越多，混合开发也成为主流，这里封装下android自带的webview，让后续开发更具通用性 封装思路：1-提供web页面的头部可配置2-实现android与js互相调用 web页面头部通用布局如下： xml如下：1234567891011121314151617181920212223242526272829303132333435363738394041424344454">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/06/13/webview封装/title.jpg">
+<meta property="og:updated_time" content="2018-06-25T06:53:27.214Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android和js的混合开发">
+<meta name="twitter:description" content="现在混合开发的框架越来越多，混合开发也成为主流，这里封装下android自带的webview，让后续开发更具通用性 封装思路：1-提供web页面的头部可配置2-实现android与js互相调用 web页面头部通用布局如下： xml如下：1234567891011121314151617181920212223242526272829303132333435363738394041424344454">
+<meta name="twitter:image" content="http://chenthreetrees.github.io/2018/06/13/webview封装/title.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://chenthreetrees.github.io/2018/06/13/webview封装/"/>
+
+
+
+
+
+  <title>Android和js的混合开发 | 三木</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">三木</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">自从当年我背井离乡，乡里人就没喝过一口水</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-android">
+          <a href="/android/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-android"></i> <br />
+            
+            Android
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://chenthreetrees.github.io/2018/06/13/webview封装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="threetree">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三木">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android和js的混合开发</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-13T10:40:16+08:00">
+                2018-06-13
+              </time>
+            
+
+            
+
+            
+          </span>
+		  
+		  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+			</script>
+			
+				<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv">
+				</span> 次</span>
+			
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/混合开发/" itemprop="url" rel="index">
+                    <span itemprop="name">混合开发</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/混合开发/webview/" itemprop="url" rel="index">
+                    <span itemprop="name">webview</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>现在混合开发的框架越来越多，混合开发也成为主流，<br>这里封装下android自带的webview，让后续开发更具通用性</p>
+<p><strong>封装思路：</strong><br>1-提供web页面的头部可配置<br>2-实现android与js互相调用</p>
+<p>web页面头部通用布局如下：<br><img src="title.jpg" alt="title"></p>
+<p>xml如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">              android:id=&quot;@+id/titleLayout&quot;</span><br><span class="line">              android:layout_width=&quot;match_parent&quot;</span><br><span class="line">              android:layout_height=&quot;48dp&quot;</span><br><span class="line">              android:background=&quot;#000&quot;</span><br><span class="line">              android:orientation=&quot;horizontal&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;LinearLayout</span><br><span class="line">        android:layout_width=&quot;0dp&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:layout_weight=&quot;1&quot;</span><br><span class="line">        android:gravity=&quot;center_vertical&quot;</span><br><span class="line">        android:orientation=&quot;horizontal&quot;&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ImageView</span><br><span class="line">            android:id=&quot;@+id/common_title_back_iv&quot;</span><br><span class="line">            android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">            android:layout_height=&quot;match_parent&quot;</span><br><span class="line">            android:clickable=&quot;true&quot;</span><br><span class="line">            android:paddingLeft=&quot;12dp&quot;</span><br><span class="line">            android:paddingRight=&quot;12dp&quot;</span><br><span class="line">            android:scaleType=&quot;centerInside&quot;</span><br><span class="line">            android:src=&quot;@drawable/ic_common_back&quot;/&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ImageView</span><br><span class="line">            android:id=&quot;@+id/common_title_finish_iv&quot;</span><br><span class="line">            android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">            android:layout_height=&quot;match_parent&quot;</span><br><span class="line">            android:clickable=&quot;true&quot;</span><br><span class="line">            android:paddingRight=&quot;12dp&quot;</span><br><span class="line">            android:scaleType=&quot;centerInside&quot;</span><br><span class="line">            android:src=&quot;@drawable/ic_titlebar_close&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;/LinearLayout&gt;</span><br><span class="line"></span><br><span class="line">    &lt;RelativeLayout</span><br><span class="line">        android:layout_width=&quot;0dp&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:layout_weight=&quot;2&quot;</span><br><span class="line">        android:gravity=&quot;center&quot;&gt;</span><br><span class="line"></span><br><span class="line">        &lt;LinearLayout</span><br><span class="line">            android:id=&quot;@+id/app_lly_barmenu&quot;</span><br><span class="line">            android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">            android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">            android:layout_centerInParent=&quot;true&quot;</span><br><span class="line">            android:orientation=&quot;horizontal&quot;&gt;</span><br><span class="line"></span><br><span class="line">            &lt;TextView</span><br><span class="line">                android:id=&quot;@+id/common_title_name_tv&quot;</span><br><span class="line">                android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">                android:layout_height=&quot;match_parent&quot;</span><br><span class="line">                android:gravity=&quot;center&quot;</span><br><span class="line">                android:text=&quot;标题&quot;</span><br><span class="line">                android:maxLines=&quot;1&quot;</span><br><span class="line">                android:ellipsize=&quot;end&quot;</span><br><span class="line">                android:textColor=&quot;#fff&quot;</span><br><span class="line">                android:textSize=&quot;18sp&quot;/&gt;</span><br><span class="line"></span><br><span class="line">            &lt;ImageView</span><br><span class="line">                android:id=&quot;@+id/common_title_name_arraw_tv&quot;</span><br><span class="line">                android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">                android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">                android:layout_marginLeft=&quot;8dp&quot;</span><br><span class="line">                android:paddingBottom=&quot;15dp&quot;</span><br><span class="line">                android:paddingLeft=&quot;5dp&quot;</span><br><span class="line">                android:paddingTop=&quot;15dp&quot;</span><br><span class="line">                android:src=&quot;@drawable/ic_titlebar_down&quot;</span><br><span class="line">                /&gt;</span><br><span class="line">        &lt;/LinearLayout&gt;</span><br><span class="line">    &lt;/RelativeLayout&gt;</span><br><span class="line"></span><br><span class="line">    &lt;LinearLayout</span><br><span class="line">        android:id=&quot;@+id/common_title_right&quot;</span><br><span class="line">        android:layout_width=&quot;0dp&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:layout_weight=&quot;1&quot;</span><br><span class="line">        android:gravity=&quot;center&quot;</span><br><span class="line">        android:orientation=&quot;horizontal&quot;&gt;</span><br><span class="line"></span><br><span class="line">        &lt;TextView</span><br><span class="line">            android:id=&quot;@+id/common_title_right_tv&quot;</span><br><span class="line">            android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">            android:layout_height=&quot;match_parent&quot;</span><br><span class="line">            android:gravity=&quot;center&quot;</span><br><span class="line">            android:paddingLeft=&quot;12dp&quot;</span><br><span class="line">            android:text=&quot;菜单&quot;</span><br><span class="line">            android:maxLines=&quot;1&quot;</span><br><span class="line">            android:ellipsize=&quot;end&quot;</span><br><span class="line">            android:textColor=&quot;#fff&quot;</span><br><span class="line">            android:textSize=&quot;14sp&quot;/&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ImageView</span><br><span class="line">            android:id=&quot;@+id/common_title_right_iv&quot;</span><br><span class="line">            android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">            android:layout_height=&quot;match_parent&quot;</span><br><span class="line">            android:layout_gravity=&quot;center_vertical&quot;</span><br><span class="line">            android:paddingLeft=&quot;2dp&quot;</span><br><span class="line">            android:paddingRight=&quot;12dp&quot;</span><br><span class="line">            android:scaleType=&quot;centerInside&quot;</span><br><span class="line">            /&gt;</span><br><span class="line">    &lt;/LinearLayout&gt;</span><br><span class="line"></span><br><span class="line">&lt;/LinearLayout&gt;</span><br></pre></td></tr></table></figure></p>
+<p><strong>定义webview与页面的交互接口：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 用于webview的model和activity的互动</span><br><span class="line"> */</span><br><span class="line">public interface IWebView</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    /** 获取webview */</span><br><span class="line">    public BaseWebView getWebView();</span><br><span class="line"></span><br><span class="line">    /** 设置标题栏显示 */</span><br><span class="line">    public void updateTitleView(int finishVisiable, int titleVisiable, int rightVisiable, int rightDesVisiable, int finishResId, int titleResId, int rightResId, String rightDes);</span><br><span class="line"></span><br><span class="line">    /** 更新标题 */</span><br><span class="line">    public void updateTitleTv(String title);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 刷新网页</span><br><span class="line">     */</span><br><span class="line">    public void refreshWebView();</span><br><span class="line">    </span><br><span class="line">    /** 获取当前url */</span><br><span class="line">    public String getCurrentUrl();</span><br><span class="line">    </span><br><span class="line">    /**</span><br><span class="line">     * 关闭界面</span><br><span class="line">     */</span><br><span class="line">    public void doFinish();</span><br><span class="line">    </span><br><span class="line">    /**</span><br><span class="line">     * 处理加载失败</span><br><span class="line">     */</span><br><span class="line">    public void doLoadError();</span><br><span class="line">    </span><br><span class="line">    /**</span><br><span class="line">     * 开始加载</span><br><span class="line">     */</span><br><span class="line">    public void doStartLoad();</span><br><span class="line">    </span><br><span class="line">    /**</span><br><span class="line">     * 开始加载</span><br><span class="line">     */</span><br><span class="line">    public void doLoadOver();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 调用javaScript包括参数</span><br><span class="line">     */</span><br><span class="line">    public void doJavaScript(String jsFunction);</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">     * 调用javaScript包括参数,带返回数据的回调</span><br><span class="line">     * @param jsFunction</span><br><span class="line">     * @param callback</span><br><span class="line">     */</span><br><span class="line">    public void doJavaScriptOnResult(String jsFunction, ValueCallback callback);</span><br><span class="line">    </span><br><span class="line">    /**</span><br><span class="line">     * 获取主view</span><br><span class="line">     */</span><br><span class="line">    public View getMainView();</span><br><span class="line">    /**</span><br><span class="line">     * 获取右边标题imageview</span><br><span class="line">     */</span><br><span class="line">    public ImageView getRightImageView();</span><br><span class="line">    /**</span><br><span class="line">     * 获取右边标题TextView</span><br><span class="line">     */</span><br><span class="line">    public TextView getRightTextView();</span><br><span class="line"></span><br><span class="line">    public ImageView getFinishImageView();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>webview和标题栏的配置抽象类：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * webView处理类</span><br><span class="line"> */</span><br><span class="line">public abstract class AbsWebModel</span><br><span class="line">&#123;</span><br><span class="line">	/**</span><br><span class="line">	 * 打开系统文件选择</span><br><span class="line">	 */</span><br><span class="line">	public static final int WEBVIEW_SYSTEM_CHOOSE_FILE = 10;</span><br><span class="line">	/**</span><br><span class="line">	 * 打开自带相册选择</span><br><span class="line">	 */</span><br><span class="line">	public static final int WEBVIEW_ANYFISH_CHOOSE_PHOTO = 11;</span><br><span class="line"></span><br><span class="line">	protected Context mContext;</span><br><span class="line">	/**</span><br><span class="line">	 * 回调处理</span><br><span class="line">	 */</span><br><span class="line">	protected IWebView mIWebView;</span><br><span class="line">	/**</span><br><span class="line">	 * 初始url</span><br><span class="line">	 */</span><br><span class="line">	protected String mUrl;</span><br><span class="line">	/**</span><br><span class="line">	 * 参数</span><br><span class="line">	 */</span><br><span class="line">	protected Bundle mBundle;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 必须且只能实现该构造函数，参数不可变更</span><br><span class="line">	 *</span><br><span class="line">	 * @param context</span><br><span class="line">	 * @param intent</span><br><span class="line">	 * @param iWebView</span><br><span class="line">	 */</span><br><span class="line">	public AbsWebModel(Context context, Intent intent, IWebView iWebView)</span><br><span class="line">	&#123;</span><br><span class="line">		super();</span><br><span class="line">		// TODO Auto-generated constructor stub</span><br><span class="line">		this.mContext = context;</span><br><span class="line">		this.mIWebView = iWebView;</span><br><span class="line">		this.mBundle = intent.getBundleExtra(BaseWebActivity.INTENT_WEB_VIEW_BUNDEL_KEY);</span><br><span class="line">		parseIntent(intent);</span><br><span class="line">		initTitleView();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	protected abstract void parseIntent(Intent intent);</span><br><span class="line"></span><br><span class="line">	public String getInitUrl()</span><br><span class="line">	&#123;</span><br><span class="line">		return mUrl;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public String getCurrentUrl()</span><br><span class="line">	&#123;</span><br><span class="line">		return mIWebView.getCurrentUrl();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 初始化webview监听管理</span><br><span class="line">	 *</span><br><span class="line">	 * @param webView</span><br><span class="line">	 */</span><br><span class="line">	public void initWebViewListener(BaseWebView webView)</span><br><span class="line">	&#123;</span><br><span class="line">		// 设置Client</span><br><span class="line">		webView.setWebViewClient(new CustomWebViewClient());</span><br><span class="line"></span><br><span class="line">		doCustomListenerInit(webView);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 自定义的一些listen初始化</span><br><span class="line">	 */</span><br><span class="line">	protected void doCustomListenerInit(BaseWebView webView)</span><br><span class="line">	&#123;</span><br><span class="line">		// 暂未使用</span><br><span class="line">		// CustomDownLoadListener downloadListener = new</span><br><span class="line">		// CustomDownLoadListener();</span><br><span class="line">		// webView.setDownloadListener(downloadListener);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)</span><br><span class="line">	public void initWebSet(BaseWebView webView)</span><br><span class="line">	&#123;</span><br><span class="line">		WebSettings webSetting = webView.getSettings();</span><br><span class="line">		webSetting.setAllowFileAccessFromFileURLs(true);</span><br><span class="line">		webSetting.setJavaScriptEnabled(true);</span><br><span class="line">		webSetting.setAllowFileAccess(true);</span><br><span class="line">		webSetting.setAllowContentAccess(true);</span><br><span class="line">		webSetting.setDefaultTextEncodingName(&quot;utf-8&quot;);</span><br><span class="line">		webSetting.setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);</span><br><span class="line">		webSetting.setUseWideViewPort(true);</span><br><span class="line">		webSetting.setDomStorageEnabled(true);//临时，简单数据的存储</span><br><span class="line">		//webSetting.setPluginsEnabled(true);</span><br><span class="line">		webSetting.setSupportMultipleWindows(false);</span><br><span class="line">		// html页面大小自适应</span><br><span class="line">		webSetting.setDefaultZoom(WebSettings.ZoomDensity.CLOSE);</span><br><span class="line">		webSetting.setLoadWithOverviewMode(true);</span><br><span class="line">		customWebSet(webSetting);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 可定制的set</span><br><span class="line">	 */</span><br><span class="line">	public void customWebSet(WebSettings webSetting)</span><br><span class="line">	&#123;</span><br><span class="line">		// 缓存,有的页面可能不需要缓存</span><br><span class="line">		webSetting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);</span><br><span class="line">		webSetting.setAppCacheMaxSize(Long.MAX_VALUE);</span><br><span class="line">		webSetting.setAppCacheEnabled(true);</span><br><span class="line">		// 缩放</span><br><span class="line">		webSetting.setBuiltInZoomControls(false);</span><br><span class="line">		webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);</span><br><span class="line">		webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 设置js调用java接口</span><br><span class="line">	 *</span><br><span class="line">	 * @param objName</span><br><span class="line">	 */</span><br><span class="line">	protected final void setJsToJava(String objName)</span><br><span class="line">	&#123;</span><br><span class="line">		mIWebView.getWebView().addJavascriptInterface(this, objName);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * java调用js接口</span><br><span class="line">	 *</span><br><span class="line">	 * @param jsFunction funtion()</span><br><span class="line">	 */</span><br><span class="line">	protected final void doJavaScript(String jsFunction)</span><br><span class="line">	&#123;</span><br><span class="line">		mIWebView.doJavaScript(jsFunction);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * java调用js接口</span><br><span class="line">	 * @param jsFunction</span><br><span class="line">	 * @param callback</span><br><span class="line">	 */</span><br><span class="line">	protected final void doJavaScript(String jsFunction, ValueCallback callback)</span><br><span class="line">	&#123;</span><br><span class="line">		mIWebView.doJavaScriptOnResult(jsFunction,callback);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 刷新网页</span><br><span class="line">	 */</span><br><span class="line">	public void refreshWebView()</span><br><span class="line">	&#123;</span><br><span class="line">		mIWebView.refreshWebView();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 重新加载</span><br><span class="line">	 */</span><br><span class="line">	protected void doReloadUrl(BaseWebView webView)</span><br><span class="line">	&#123;</span><br><span class="line">		webView.reload();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 加载百分比变化</span><br><span class="line">	 *</span><br><span class="line">	 * @param view</span><br><span class="line">	 * @param newProgress</span><br><span class="line">	 */</span><br><span class="line">	public void LoadProgressChanged(WebView view, int newProgress)</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 加载开始显示处理</span><br><span class="line">	 */</span><br><span class="line">	public final void doStartLoad(BaseWebView webView)</span><br><span class="line">	&#123;</span><br><span class="line">		mIWebView.doStartLoad();</span><br><span class="line">		doReloadUrl(webView);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 加载失败显示处理</span><br><span class="line">	 */</span><br><span class="line">	protected final void doLoadFailure()</span><br><span class="line">	&#123;</span><br><span class="line">		mIWebView.doLoadError();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * web监听</span><br><span class="line">	 */</span><br><span class="line">	private class CustomWebViewClient extends WebViewClient</span><br><span class="line">	&#123;</span><br><span class="line">		@Override</span><br><span class="line">		public void onPageStarted(WebView arg0, String arg1, Bitmap arg2)</span><br><span class="line">		&#123;</span><br><span class="line">			super.onPageStarted(arg0, arg1, arg2);</span><br><span class="line">			updateTitleTvByUrl(arg1);</span><br><span class="line">			mIWebView.doStartLoad();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		@Override</span><br><span class="line">		public boolean shouldOverrideUrlLoading(WebView view, String url)</span><br><span class="line">		&#123;</span><br><span class="line">			return false;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		@Override</span><br><span class="line">		public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request)</span><br><span class="line">		&#123;</span><br><span class="line">			return super.shouldInterceptRequest(view, request);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		@Override</span><br><span class="line">		public void onPageFinished(WebView view, String url)</span><br><span class="line">		&#123;</span><br><span class="line">			super.onPageFinished(view, url);</span><br><span class="line">			doPageFinished(view, url);</span><br><span class="line">			mIWebView.doLoadOver();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		@Override</span><br><span class="line">		public void onReceivedSslError(WebView arg0, SslErrorHandler arg1, SslError arg2)</span><br><span class="line">		&#123;</span><br><span class="line">			// TODO Auto-generated method stub</span><br><span class="line">			super.onReceivedSslError(arg0, arg1, arg2);</span><br><span class="line">			doLoadFailure();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		@Override</span><br><span class="line">		public void onReceivedError(WebView arg0, int arg1, String arg2, String arg3)</span><br><span class="line">		&#123;</span><br><span class="line">			super.onReceivedError(arg0, arg1, arg2, arg3);</span><br><span class="line">			doLoadFailure();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/***********************************************************</span><br><span class="line">	 ********************   标题栏设置  *************************</span><br><span class="line">	 ***********************************************************/</span><br><span class="line">	/**</span><br><span class="line">	 * 更新标题栏</span><br><span class="line">	 */</span><br><span class="line">	protected abstract void initTitleView();</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 右标题菜单</span><br><span class="line">	 */</span><br><span class="line">	public abstract void doClickMenu();</span><br><span class="line">	/**</span><br><span class="line">	 * 点击返回</span><br><span class="line">	 *</span><br><span class="line">	 * @param webview</span><br><span class="line">	 * @return true:关闭界面 false:不关闭界面</span><br><span class="line">	 */</span><br><span class="line">	public abstract boolean doClickBack(BaseWebView webview);</span><br><span class="line">	/**</span><br><span class="line">	 * 显示初始化界面</span><br><span class="line">	 */</span><br><span class="line">	public abstract void loadInitView(BaseWebView webView);</span><br><span class="line">	/**</span><br><span class="line">	 * 显示右边菜单键</span><br><span class="line">	 */</span><br><span class="line">	public abstract void setTitleRightIv(ImageView rightIv);</span><br><span class="line">	/**</span><br><span class="line">	 * 设置关闭按钮</span><br><span class="line">	 */</span><br><span class="line">	public abstract void setTitleFinishIv(ImageView finishIv);</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 关闭时调用</span><br><span class="line">	 */</span><br><span class="line">	public void detroy()</span><br><span class="line">	&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 更新标题 可与onReceivedTitle二选一实现</span><br><span class="line">	 */</span><br><span class="line">	public void updateTitleTvByUrl(String currentUrl)</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 加载页面完成</span><br><span class="line">	 */</span><br><span class="line">	public void doPageFinished(WebView view, String url)</span><br><span class="line">	&#123;</span><br><span class="line">		onReceivedTitle(view.getTitle());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 收到网页标题 可与updateTitleTvByUrl二选一实现</span><br><span class="line">	 *</span><br><span class="line">	 * @param title</span><br><span class="line">	 */</span><br><span class="line">	public void onReceivedTitle(String title)</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 处理界面返回事件</span><br><span class="line">	 */</span><br><span class="line">	public void doActivityResult(int requestCode, int resultCode, Intent data)</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 是否可响应长按</span><br><span class="line">	 */</span><br><span class="line">	public boolean getIsCanLongClick()</span><br><span class="line">	&#123;</span><br><span class="line">		return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/***********************************************************</span><br><span class="line">	 * *******************   文件调用  *************************</span><br><span class="line">	 ***********************************************************/</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * web调用文件选择</span><br><span class="line">	 */</span><br><span class="line">	public final void openFileChooser(Activity activity, String acceptType)</span><br><span class="line">	&#123;</span><br><span class="line">		if (acceptType == null || acceptType.equals(&quot;&quot;))</span><br><span class="line">		&#123;</span><br><span class="line">			acceptType = &quot;*/*&quot;;</span><br><span class="line">		&#125;</span><br><span class="line">		customOpenFileChoose(activity, acceptType);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * web调用文件选择&lt;br&gt;</span><br><span class="line">	 * 自定义时，不可以调用super&lt;br&gt;</span><br><span class="line">	 * systemFileChoose(Activity activity, String</span><br><span class="line">	 * acceptType)和customFileChoose(Activity activity)方法二选一</span><br><span class="line">	 */</span><br><span class="line">	protected void customOpenFileChoose(Activity activity, String acceptType)</span><br><span class="line">	&#123;</span><br><span class="line">//		systemFileChoose(activity, acceptType);</span><br><span class="line">		customFileChoose(activity,acceptType);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * web调用文件选择 自定义时，不可以调用super</span><br><span class="line">	 */</span><br><span class="line">	protected final void customFileChoose(Activity activity, String acceptType)</span><br><span class="line">	&#123;</span><br><span class="line">		if (acceptType.startsWith(&quot;image&quot;))</span><br><span class="line">		&#123;</span><br><span class="line">			Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);</span><br><span class="line">			activity.startActivityForResult(camera, 2);</span><br><span class="line">		&#125; else</span><br><span class="line">		&#123;</span><br><span class="line">			systemFileChoose(activity, acceptType);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * web调用文件选择 自定义时，不可以调用super</span><br><span class="line">	 */</span><br><span class="line">	private final void systemFileChoose(Activity activity, String acceptType)</span><br><span class="line">	&#123;</span><br><span class="line">		Intent i = new Intent(Intent.ACTION_GET_CONTENT);</span><br><span class="line">		i.addCategory(Intent.CATEGORY_OPENABLE);</span><br><span class="line">		i.setType(acceptType);</span><br><span class="line">		activity.startActivityForResult(</span><br><span class="line">				Intent.createChooser(i, &quot;文件选择&quot;),</span><br><span class="line">				WEBVIEW_SYSTEM_CHOOSE_FILE);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>具体配置公共类：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 基本公用的model, 带标题栏但无菜单</span><br><span class="line"> */</span><br><span class="line">public class BaseWebModel extends AbsWebModel</span><br><span class="line">&#123;</span><br><span class="line">    private final int MAX_LENGTH = 14;</span><br><span class="line">    public static final String ACTION_LOAD = &quot;action_load&quot;;</span><br><span class="line"></span><br><span class="line">    private RecvMessage msg;</span><br><span class="line">	</span><br><span class="line">	protected WebHandler mHandler;</span><br><span class="line"></span><br><span class="line">    protected static class WebHandler extends Handler</span><br><span class="line">    &#123;</span><br><span class="line">        private WeakReference&lt;BaseWebModel&gt; webInstance;</span><br><span class="line"></span><br><span class="line">        public WebHandler(BaseWebModel model)</span><br><span class="line">        &#123;</span><br><span class="line">            this.webInstance = new WeakReference&lt;BaseWebModel&gt;(model);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void handleMessage(Message msg)</span><br><span class="line">        &#123;</span><br><span class="line">            super.handleMessage(msg);</span><br><span class="line">            final BaseWebModel model = webInstance == null ? null : webInstance.get();</span><br><span class="line">            if (model == null) &#123;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            model.handleMessage(msg);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	*</span><br><span class="line">	*子类根据业务逻辑自己实现</span><br><span class="line">	*/</span><br><span class="line">    protected void handleMessage(Message msg)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 必须且只能实现该构造函数，参数不可变更</span><br><span class="line">     * </span><br><span class="line">     * @param context</span><br><span class="line">     * @param intent</span><br><span class="line">     * @param iWebView</span><br><span class="line">     */</span><br><span class="line">    public BaseWebModel(Context context, Intent intent, IWebView iWebView)</span><br><span class="line">    &#123;</span><br><span class="line">        super(context, intent, iWebView);</span><br><span class="line">        IntentFilter filter = new IntentFilter();</span><br><span class="line">        filter.addAction(ACTION_LOAD);</span><br><span class="line">        msg = new RecvMessage();</span><br><span class="line">        context.registerReceiver(msg, filter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void parseIntent(Intent intent)</span><br><span class="line">    &#123;</span><br><span class="line">        mUrl = intent.getStringExtra(BaseWebActivity.INTENT_WEB_VIEW_URL_KEY);</span><br><span class="line">//        if (!TextUtils.isEmpty(mUrl))</span><br><span class="line">//        &#123;</span><br><span class="line">//            mUrl = getUrlContent(mUrl);</span><br><span class="line">//        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private String getUrlContent(String content)</span><br><span class="line">    &#123;// 首先要先确定该字符串是URL,才能调用该方法</span><br><span class="line">        String contentUrl = content.trim();</span><br><span class="line">        String contentUrlLowercase = content.trim().toLowerCase();</span><br><span class="line">        if (!contentUrlLowercase.startsWith(&quot;http&quot;))</span><br><span class="line">        &#123;</span><br><span class="line">            // 如果不是以http开头的，自动补充http</span><br><span class="line">            if (!contentUrlLowercase.startsWith(&quot;www.&quot;))</span><br><span class="line">            &#123;</span><br><span class="line">                contentUrl = &quot;http://www.&quot; + content.trim();</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                contentUrl = &quot;http://&quot; + content.trim();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        else if (contentUrlLowercase.startsWith(&quot;https&quot;))</span><br><span class="line">        &#123;</span><br><span class="line">            contentUrl = &quot;https&quot; + contentUrl.substring(5);</span><br><span class="line">        &#125;</span><br><span class="line">        else if (contentUrlLowercase.startsWith(&quot;http&quot;))</span><br><span class="line">        &#123;</span><br><span class="line">            contentUrl = &quot;http&quot; + contentUrl.substring(4);</span><br><span class="line">        &#125;</span><br><span class="line">        return contentUrl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void initTitleView()</span><br><span class="line">    &#123;</span><br><span class="line">        mIWebView.updateTitleView(View.INVISIBLE, View.GONE, View.INVISIBLE, View.INVISIBLE,0, 0, 0,null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void doClickMenu()</span><br><span class="line">    &#123;</span><br><span class="line">        // 无菜单</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean doClickBack(BaseWebView webview)</span><br><span class="line">    &#123;</span><br><span class="line">        if (webview != null &amp;&amp; webview.canGoBack())</span><br><span class="line">        &#123;</span><br><span class="line">            webview.goBack();</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void loadInitView(BaseWebView webView)</span><br><span class="line">    &#123;</span><br><span class="line">        webView.loadUrl(mUrl);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void detroy()</span><br><span class="line">    &#123;</span><br><span class="line">        super.detroy();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void setTitleRightIv(ImageView rightIv)</span><br><span class="line">    &#123;</span><br><span class="line">        rightIv.setVisibility(View.INVISIBLE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void setTitleFinishIv(ImageView finishIv)</span><br><span class="line">    &#123;</span><br><span class="line">        finishIv.setVisibility(View.INVISIBLE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onReceivedTitle(String title)</span><br><span class="line">    &#123;</span><br><span class="line">        if (title == null)</span><br><span class="line">            title = &quot;&quot;;</span><br><span class="line">        if (title.length() &gt; MAX_LENGTH)</span><br><span class="line">            title = title.subSequence(0, MAX_LENGTH) + &quot;...&quot;;</span><br><span class="line">        mIWebView.updateTitleTv(title);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class RecvMessage extends BroadcastReceiver</span><br><span class="line">    &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onReceive(Context context, Intent intent)</span><br><span class="line">        &#123;</span><br><span class="line">            if(ACTION_LOAD.equals(intent.getAction()))</span><br><span class="line">            &#123;</span><br><span class="line">                String url = intent.getStringExtra(&quot;url&quot;);</span><br><span class="line">                updateTitleTvByUrl(url);</span><br><span class="line">                mIWebView.getWebView().loadUrl(url);</span><br><span class="line">                mIWebView.doStartLoad();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>具体的model类：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">public class MenuWebModel extends BaseWebModel</span><br><span class="line">&#123;</span><br><span class="line">	private ImageView mFinishIv;</span><br><span class="line">	private String mJsFunc;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 必须且只能实现该构造函数，参数不可变更</span><br><span class="line">	 *</span><br><span class="line">	 * @param context</span><br><span class="line">	 * @param intent</span><br><span class="line">	 * @param iWebView</span><br><span class="line">	 */</span><br><span class="line">	public MenuWebModel(Context context, Intent intent, IWebView iWebView)</span><br><span class="line">	&#123;</span><br><span class="line">		super(context, intent, iWebView);</span><br><span class="line">		setJsToJava(&quot;android&quot;);//设置js调用android</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	@Override</span><br><span class="line">	protected void parseIntent(Intent intent)</span><br><span class="line">	&#123;</span><br><span class="line">		super.parseIntent(intent);</span><br><span class="line">		Bundle bundle = intent.getBundleExtra(BaseWebActivity.INTENT_WEB_VIEW_BUNDEL_KEY);</span><br><span class="line">		if(bundle != null)</span><br><span class="line">		&#123;</span><br><span class="line">			mJsFunc = bundle.getString(&quot;func&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	protected void initTitleView()</span><br><span class="line">	&#123;</span><br><span class="line">		mIWebView.updateTitleView(View.INVISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE, 0, 0, 0, null);</span><br><span class="line">		mFinishIv = mIWebView.getFinishImageView();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public void doClickMenu()</span><br><span class="line">	&#123;</span><br><span class="line">		//标题栏右边菜单点击事件</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public void setTitleRightIv(ImageView rightIv)</span><br><span class="line">	&#123;</span><br><span class="line">		super.setTitleRightIv(rightIv);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public void setTitleFinishIv(ImageView finishIv)</span><br><span class="line">	&#123;</span><br><span class="line">		super.setTitleFinishIv(finishIv);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public void onReceivedTitle(String title)</span><br><span class="line">	&#123;</span><br><span class="line">		super.onReceivedTitle(title);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public void doPageFinished(WebView view, String url)</span><br><span class="line">	&#123;</span><br><span class="line">		super.doPageFinished(view, url);</span><br><span class="line">		mFinishIv.setVisibility(View.INVISIBLE);</span><br><span class="line">		if (view.canGoBack())</span><br><span class="line">		&#123;</span><br><span class="line">			mFinishIv.setVisibility(View.VISIBLE);</span><br><span class="line">		&#125;</span><br><span class="line">		//页面加载完成后，在此处添加调用js的代码</span><br><span class="line">		if(!TextUtils.isEmpty(mJsFunc))</span><br><span class="line">		&#123;</span><br><span class="line">			doJavaScript(mJsFunc, new ValueCallback() &#123;</span><br><span class="line">				@Override</span><br><span class="line">				public void onReceiveValue(Object value)</span><br><span class="line">				&#123;</span><br><span class="line">					//调用js接口返回的数据</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	//js调用android的统一接口,考虑到线程问题，用handler来切换线程</span><br><span class="line">	//通过json数据来分发具体的调用接口</span><br><span class="line">	//var json=&#123;&quot;call&quot;: &quot;android的方法名&quot;,&quot;callback&quot;: &quot;回调js的方法名&quot;,&quot;data&quot;: &#123;&quot;key1&quot;: value1,&quot;key2&quot;: value2,&#125;&#125;;   </span><br><span class="line">	//window.android.call(JSON.stringify(json));  </span><br><span class="line">	@JavascriptInterface</span><br><span class="line">	public void call(String json)</span><br><span class="line">	&#123;</span><br><span class="line">		mHandler.post(new Runnable() &#123;</span><br><span class="line">			@Override</span><br><span class="line">			public void run()</span><br><span class="line">			&#123;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public void doActivityResult(int requestCode, int resultCode, Intent data)</span><br><span class="line">	&#123;</span><br><span class="line">		super.doActivityResult(requestCode, resultCode, data);</span><br><span class="line">		//页面跳转回传来的数据，在这里处理</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>BaseWebActivity：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br></pre></td><td class="code"><pre><span class="line">public class BaseWebActivity extends FragmentActivity implements IWebView &#123;</span><br><span class="line">    /**</span><br><span class="line">     * model 类名</span><br><span class="line">     */</span><br><span class="line">    public static final String INTENT_MODEL_CLASS_NAME = &quot;intent_model_class_name&quot;;</span><br><span class="line">    /**</span><br><span class="line">     * 初始url</span><br><span class="line">     */</span><br><span class="line">    public static final String INTENT_WEB_VIEW_URL_KEY = &quot;inent_web_view_url_key&quot;;</span><br><span class="line">    /**</span><br><span class="line">     * 传递的参数</span><br><span class="line">     */</span><br><span class="line">    public static final String INTENT_WEB_VIEW_BUNDEL_KEY = &quot;inent_web_view_bundel_key&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 整体布局</span><br><span class="line">     */</span><br><span class="line">    private RelativeLayout mMainView;</span><br><span class="line">    /**</span><br><span class="line">     * 标题布局</span><br><span class="line">     */</span><br><span class="line">    private LinearLayout mTitleLayout;</span><br><span class="line">    /**</span><br><span class="line">     * 标题</span><br><span class="line">     */</span><br><span class="line">    private TextView mTitleTv;</span><br><span class="line">    /**</span><br><span class="line">     * 返回</span><br><span class="line">     */</span><br><span class="line">    private ImageView mBackBtn;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 关闭</span><br><span class="line">     */</span><br><span class="line">    private ImageView mFinishBtn;</span><br><span class="line">    /**</span><br><span class="line">     * 加载进度</span><br><span class="line">     */</span><br><span class="line">    private ProgressBar mProgressbar;</span><br><span class="line">    /**</span><br><span class="line">     * 菜单</span><br><span class="line">     */</span><br><span class="line">    private ImageView mMenuBtn;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 菜单描述</span><br><span class="line">     */</span><br><span class="line">    private TextView mMenuDes;</span><br><span class="line">    /**</span><br><span class="line">     * webview</span><br><span class="line">     */</span><br><span class="line">    private BaseWebView mWebView;</span><br><span class="line"></span><br><span class="line">    private FrameLayout mWebFlyt;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 加载失败view</span><br><span class="line">     */</span><br><span class="line">    private View mLoadFailView;</span><br><span class="line">    /**</span><br><span class="line">     * 重新加载按钮</span><br><span class="line">     */</span><br><span class="line">    private Button mReloadBtn;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 处理类</span><br><span class="line">     */</span><br><span class="line">    private AbsWebModel mModel;</span><br><span class="line"></span><br><span class="line">    private ValueCallback&lt;Uri&gt; uploadFile;</span><br><span class="line"></span><br><span class="line">    public static &lt;T extends AbsWebModel&gt; void startBaseWebActivity(Context context, Class&lt;T&gt; modelClass, String url, Bundle bundel)</span><br><span class="line">    &#123;</span><br><span class="line">        startBaseWebActivity(context, BaseWebActivity.class, modelClass, url, bundel);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static &lt;T extends AbsWebModel&gt; void startBaseWebActivity(Context context, Class&lt;?&gt; webviewCls, Class&lt;T&gt; modelClass, String url, Bundle bundel)</span><br><span class="line">    &#123;</span><br><span class="line">        Intent intent = new Intent(context, webviewCls);</span><br><span class="line">        if (modelClass == null) &#123;</span><br><span class="line">            intent.putExtra(INTENT_MODEL_CLASS_NAME, BaseWebModel.class.getName());</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            intent.putExtra(INTENT_MODEL_CLASS_NAME, modelClass.getName());</span><br><span class="line">        &#125;</span><br><span class="line">        intent.putExtra(INTENT_WEB_VIEW_URL_KEY, url);</span><br><span class="line">        intent.putExtra(INTENT_WEB_VIEW_BUNDEL_KEY, bundel);</span><br><span class="line">        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);</span><br><span class="line">        context.startActivity(intent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState)</span><br><span class="line">    &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line"></span><br><span class="line">        Intent intent = getIntent();</span><br><span class="line">        if (intent == null) &#123;</span><br><span class="line">            finish();</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        getWindow().setFormat(PixelFormat.TRANSLUCENT);</span><br><span class="line"></span><br><span class="line">        // 在条件满足时开启硬件加速</span><br><span class="line">        try &#123;</span><br><span class="line">            if (Integer.parseInt(Build.VERSION.SDK) &gt;= 11) &#123;</span><br><span class="line">                getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, android.view.WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        setContentView(R.layout.activity_baseweb);</span><br><span class="line">        initView();</span><br><span class="line">        try &#123;</span><br><span class="line">            initListenser();</span><br><span class="line">            initContent();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            finish();</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void initView()</span><br><span class="line">    &#123;</span><br><span class="line">        mMainView = (RelativeLayout) findViewById(R.id.mainView);</span><br><span class="line">        mTitleLayout = (LinearLayout) findViewById(R.id.titleLayout);</span><br><span class="line">        mTitleTv = (TextView) findViewById(R.id.common_title_name_tv);</span><br><span class="line">        mBackBtn = (ImageView) findViewById(R.id.common_title_back_iv);</span><br><span class="line">        mFinishBtn = (ImageView) findViewById(R.id.common_title_finish_iv);</span><br><span class="line">        mMenuBtn = (ImageView) findViewById(R.id.common_title_right_iv);</span><br><span class="line">        mMenuDes = (TextView) findViewById(R.id.common_title_right_tv);</span><br><span class="line"></span><br><span class="line">        mWebFlyt = (FrameLayout) findViewById(R.id.web_flyt);</span><br><span class="line">        mWebView = new BaseWebView(getApplicationContext());</span><br><span class="line">        mWebFlyt.addView(mWebView);</span><br><span class="line"></span><br><span class="line">        mLoadFailView = (View) findViewById(R.id.web_load_error_view);</span><br><span class="line">        mReloadBtn = (Button) findViewById(R.id.web_load_error_reload_btn);</span><br><span class="line">        mProgressbar = (ProgressBar) findViewById(R.id.webview_loadprogress);</span><br><span class="line">        mFinishBtn.setImageResource(R.drawable.ic_titlebar_close);</span><br><span class="line">        mBackBtn.setImageResource(R.drawable.back);</span><br><span class="line">        mFinishBtn.setVisibility(View.GONE);</span><br><span class="line">        mMenuBtn.setVisibility(View.GONE);</span><br><span class="line">        mMenuDes.setVisibility(View.GONE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private &lt;T extends AbsWebModel&gt; void initListenser() throws Exception</span><br><span class="line">    &#123;</span><br><span class="line">        BtnOnClickListener listener = new BtnOnClickListener();</span><br><span class="line">        mBackBtn.setOnClickListener(listener);</span><br><span class="line">        mMenuBtn.setOnClickListener(listener);</span><br><span class="line">        mReloadBtn.setOnClickListener(listener);</span><br><span class="line">        mFinishBtn.setOnClickListener(listener);</span><br><span class="line"></span><br><span class="line">        ((LinearLayout) findViewById(R.id.common_title_right)).setOnClickListener(listener);</span><br><span class="line"></span><br><span class="line">        Class&lt;T&gt; tempTaskClassName = (Class&lt;T&gt;) Class.forName(getIntent().getStringExtra(INTENT_MODEL_CLASS_NAME));</span><br><span class="line">        Constructor&lt;T&gt; con = tempTaskClassName.getConstructor(Context.class, Intent.class, IWebView.class);</span><br><span class="line">        mModel = (T) con.newInstance(this, getIntent(), this);</span><br><span class="line"></span><br><span class="line">        CustomWebChromeClient chromeClient = new CustomWebChromeClient();</span><br><span class="line">        mWebView.setWebChromeClient(chromeClient);</span><br><span class="line"></span><br><span class="line">        mModel.initWebViewListener(mWebView);</span><br><span class="line">        mModel.initWebSet(mWebView);</span><br><span class="line"></span><br><span class="line">        mWebView.setOnLongClickListener(new ImageLongClickListener());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     *</span><br><span class="line">     */</span><br><span class="line">    private class BtnOnClickListener implements View.OnClickListener &#123;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void onClick(View v)</span><br><span class="line">        &#123;</span><br><span class="line">            if (v.getId() == R.id.common_title_finish_iv) &#123;</span><br><span class="line">                //关闭</span><br><span class="line">                BaseWebActivity.this.finish();</span><br><span class="line">            &#125; else if (v.getId() == R.id.common_title_back_iv) &#123;</span><br><span class="line">                // 返回</span><br><span class="line">                if (mModel.doClickBack(mWebView)) &#123;</span><br><span class="line">                    BaseWebActivity.this.finish();</span><br><span class="line">                &#125;</span><br><span class="line">                //				doJavaScript(&quot;routerBack()&quot;);</span><br><span class="line">            &#125; else if (v.getId() == R.id.common_title_right) &#123;</span><br><span class="line">                // 菜单</span><br><span class="line">                mModel.doClickMenu();</span><br><span class="line">            &#125; else if (v.getId() == R.id.web_load_error_reload_btn) &#123;</span><br><span class="line">                // 重新加载</span><br><span class="line">                if (mModel != null) &#123;</span><br><span class="line">                    mModel.doStartLoad(mWebView);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean onKeyDown(int keyCode, KeyEvent event)</span><br><span class="line">    &#123;</span><br><span class="line">        if (keyCode == KeyEvent.KEYCODE_BACK &amp;&amp; event.getRepeatCount() == 0) &#123;</span><br><span class="line">            if (mModel.doClickBack(mWebView)) &#123;</span><br><span class="line">                BaseWebActivity.this.finish();</span><br><span class="line">            &#125;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return super.onKeyDown(keyCode, event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 图片长按处理</span><br><span class="line">     *</span><br><span class="line">     * @author wzy</span><br><span class="line">     */</span><br><span class="line">    private class ImageLongClickListener implements View.OnLongClickListener &#123;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public boolean onLongClick(View v)</span><br><span class="line">        &#123;</span><br><span class="line">            int type = mWebView.getHitTestResult().getType();</span><br><span class="line">            switch (type) &#123;</span><br><span class="line">                case WebView.HitTestResult.IMAGE_TYPE:</span><br><span class="line">                    // 图片</span><br><span class="line">                    showSaveImageDialog(mWebView.getHitTestResult().getExtra().toString());</span><br><span class="line">                    return true;</span><br><span class="line">                case WebView.HitTestResult.EDIT_TEXT_TYPE:</span><br><span class="line">                    // 输入框</span><br><span class="line">                    return false;</span><br><span class="line">                case WebView.HitTestResult.ANCHOR_TYPE:</span><br><span class="line">                case WebView.HitTestResult.IMAGE_ANCHOR_TYPE:</span><br><span class="line">                    // 超链接</span><br><span class="line">                    break;</span><br><span class="line">                case WebView.HitTestResult.UNKNOWN_TYPE:</span><br><span class="line">                    // 空白</span><br><span class="line">                    break;</span><br><span class="line">                default:</span><br><span class="line">                    break;</span><br><span class="line">            &#125;</span><br><span class="line">            if (!mModel.getIsCanLongClick()) &#123;</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 显示保存图片对话框</span><br><span class="line">     */</span><br><span class="line">    private void showSaveImageDialog(final String imageUrl)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void initContent()</span><br><span class="line">    &#123;</span><br><span class="line">        mModel.loadInitView(mWebView);</span><br><span class="line"></span><br><span class="line">        CookieSyncManager.createInstance(this);</span><br><span class="line">        if (Build.VERSION.SDK_INT &lt; 21) &#123;</span><br><span class="line">            CookieSyncManager.getInstance().sync();</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            CookieManager.getInstance().flush();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onDestroy()</span><br><span class="line">    &#123;</span><br><span class="line">        super.onDestroy();</span><br><span class="line">        if (mModel != null) &#123;</span><br><span class="line">            mModel.detroy();</span><br><span class="line">        &#125;</span><br><span class="line">        if (mWebView != null)// 清除</span><br><span class="line">        &#123;</span><br><span class="line">            mWebView.clearCache(true);</span><br><span class="line">            mWebView.clearHistory();</span><br><span class="line">            mWebView.clearFormData();</span><br><span class="line">            mWebView.clearSslPreferences();</span><br><span class="line">            mWebView.clearMatches();</span><br><span class="line">            mWebView.clearView();</span><br><span class="line">        &#125;</span><br><span class="line">        if (mMainView != null) &#123;</span><br><span class="line">            mMainView.removeAllViews();</span><br><span class="line">            if (mWebView != null) &#123;</span><br><span class="line">                mWebView.destroy();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onResume()</span><br><span class="line">    &#123;</span><br><span class="line">        super.onResume();</span><br><span class="line">        CookieSyncManager.getInstance().stopSync();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onActivityResult(int requestCode, int resultCode, Intent data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (requestCode == AbsWebModel.WEBVIEW_SYSTEM_CHOOSE_FILE &amp;&amp; uploadFile != null) &#123;</span><br><span class="line">            if (data == null) &#123;</span><br><span class="line">                uploadFile.onReceiveValue(null);</span><br><span class="line">                uploadFile = null;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            Uri result = data.getData();</span><br><span class="line">            uploadFile.onReceiveValue(result);</span><br><span class="line">            uploadFile = null;</span><br><span class="line">        &#125; else if (requestCode == AbsWebModel.WEBVIEW_ANYFISH_CHOOSE_PHOTO &amp;&amp; uploadFile != null) &#123;</span><br><span class="line">            if (data == null || resultCode != RESULT_OK) &#123;</span><br><span class="line">                uploadFile.onReceiveValue(null);</span><br><span class="line">                uploadFile = null;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            uploadFile = null;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            mModel.doActivityResult(requestCode, resultCode, data);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public BaseWebView getWebView()</span><br><span class="line">    &#123;</span><br><span class="line">        return mWebView;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void updateTitleView(int finishVisiable, int titleVisiable, int rightVisiable, int rightDesVisiable, int finishResId, int titleResId, int rightResId, String rightDes)</span><br><span class="line">    &#123;</span><br><span class="line">        mTitleLayout.setVisibility(titleVisiable);</span><br><span class="line">        mMenuBtn.setVisibility(rightVisiable);</span><br><span class="line">        mMenuDes.setVisibility(rightDesVisiable);</span><br><span class="line">        mFinishBtn.setVisibility(finishVisiable);</span><br><span class="line">        if (titleResId != 0) &#123;</span><br><span class="line">            mTitleTv.setText(titleResId);</span><br><span class="line">        &#125;</span><br><span class="line">        if (rightResId != 0) &#123;</span><br><span class="line">            mMenuBtn.setImageResource(rightResId);</span><br><span class="line">        &#125;</span><br><span class="line">        if (finishResId != 0) &#123;</span><br><span class="line">            mMenuBtn.setImageResource(finishResId);</span><br><span class="line">        &#125;</span><br><span class="line">        if (!TextUtils.isEmpty(rightDes)) &#123;</span><br><span class="line">            mMenuDes.setText(rightDes);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void updateTitleTv(String title)</span><br><span class="line">    &#123;</span><br><span class="line">        mTitleTv.setText(title);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void refreshWebView()</span><br><span class="line">    &#123;</span><br><span class="line">        mWebView.reload();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String getCurrentUrl()</span><br><span class="line">    &#123;</span><br><span class="line">        return mWebView.getUrl();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void doFinish()</span><br><span class="line">    &#123;</span><br><span class="line">        BaseWebActivity.this.finish();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void doLoadError()</span><br><span class="line">    &#123;</span><br><span class="line">        mLoadFailView.setVisibility(View.VISIBLE);</span><br><span class="line">        mWebFlyt.setVisibility(View.GONE);</span><br><span class="line">        mWebView.setVisibility(View.GONE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void doStartLoad()</span><br><span class="line">    &#123;</span><br><span class="line">        mLoadFailView.setVisibility(View.GONE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void doLoadOver()</span><br><span class="line">    &#123;</span><br><span class="line">        mWebFlyt.setVisibility(View.VISIBLE);</span><br><span class="line">        mWebView.setVisibility(View.VISIBLE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void doJavaScript(final String jsFunction)</span><br><span class="line">    &#123;</span><br><span class="line">        mWebView.loadUrl(&quot;javascript:&quot; + jsFunction);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void doJavaScriptOnResult(String jsFunction, ValueCallback callback)</span><br><span class="line">    &#123;</span><br><span class="line">        if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT)</span><br><span class="line">        &#123;</span><br><span class="line">            mWebView.evaluateJavascript(jsFunction,callback);</span><br><span class="line">        &#125;else</span><br><span class="line">        &#123;</span><br><span class="line">            mWebView.loadUrl(&quot;javascript:&quot; + jsFunction);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public View getMainView()</span><br><span class="line">    &#123;</span><br><span class="line">        return mMainView;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public ImageView getRightImageView()</span><br><span class="line">    &#123;</span><br><span class="line">        return mMenuBtn;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public ImageView getFinishImageView()</span><br><span class="line">    &#123;</span><br><span class="line">        return mFinishBtn;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public TextView getRightTextView()</span><br><span class="line">    &#123;</span><br><span class="line">        return mMenuDes;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 浏览器调用配置</span><br><span class="line">     */</span><br><span class="line">    public class CustomWebChromeClient extends WebChromeClient</span><br><span class="line">    &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public boolean onJsAlert(WebView view, String url, String message, JsResult result)</span><br><span class="line">        &#123;</span><br><span class="line">            Toast.makeText(BaseWebActivity.this, message, Toast.LENGTH_SHORT).show();</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void onReceivedTitle(WebView view, String title)</span><br><span class="line">        &#123;</span><br><span class="line">            mModel.onReceivedTitle(title);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void onProgressChanged(WebView view, int newProgress)</span><br><span class="line">        &#123;</span><br><span class="line">            if (newProgress == 100) &#123;</span><br><span class="line">                mProgressbar.setVisibility(View.GONE);</span><br><span class="line">                mProgressbar.setProgress(0);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                mProgressbar.setVisibility(View.VISIBLE);</span><br><span class="line">                mProgressbar.setProgress(newProgress);</span><br><span class="line">            &#125;</span><br><span class="line">            mModel.LoadProgressChanged(view, newProgress);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // For Android &lt; 3.0</span><br><span class="line">        //		@Override</span><br><span class="line">        public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg)</span><br><span class="line">        &#123;</span><br><span class="line">            openFileChooser(uploadMsg, &quot;*/*&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // For Android 3.0+</span><br><span class="line">        //		@Override</span><br><span class="line">        public void openFileChooser(ValueCallback&lt;Uri&gt; uploadFile, String acceptType)</span><br><span class="line">        &#123;</span><br><span class="line">            //			DebugUtil.printd(TAG, &quot;openFileChooser, uploadFile:&quot; + uploadFile + &quot;, acceptType:&quot; + acceptType);</span><br><span class="line">            if (uploadFile == null) &#123;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            BaseWebActivity.this.uploadFile = uploadFile;</span><br><span class="line">            mModel.openFileChooser(BaseWebActivity.this, acceptType);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // For Android &gt; 4.1.1</span><br><span class="line">        //		@Override</span><br><span class="line">        public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture)</span><br><span class="line">        &#123;</span><br><span class="line">            openFileChooser(uploadMsg, acceptType);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // For Lollipop 5.0+ Devices</span><br><span class="line">        @TargetApi(Build.VERSION_CODES.LOLLIPOP)</span><br><span class="line">        public boolean onShowFileChooser(WebView mWebView, ValueCallback&lt;Uri[]&gt; filePathCallback, FileChooserParams fileChooserParams)</span><br><span class="line">        &#123;</span><br><span class="line">            String acceptTypes[] = fileChooserParams.getAcceptTypes();</span><br><span class="line"></span><br><span class="line">            String acceptType = &quot;&quot;;</span><br><span class="line">            for (int i = 0; i &lt; acceptTypes.length; ++i) &#123;</span><br><span class="line">                if (acceptTypes[i] != null &amp;&amp; acceptTypes[i].length() != 0)</span><br><span class="line">                    acceptType += acceptTypes[i] + &quot;;&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">            if (acceptType.length() == 0)</span><br><span class="line">                acceptType = &quot;*/*&quot;;</span><br><span class="line"></span><br><span class="line">            final ValueCallback&lt;Uri[]&gt; finalFilePathCallback = filePathCallback;</span><br><span class="line"></span><br><span class="line">            ValueCallback&lt;Uri&gt; vc = new ValueCallback&lt;Uri&gt;() &#123;</span><br><span class="line"></span><br><span class="line">                @Override</span><br><span class="line">                public void onReceiveValue(Uri value)</span><br><span class="line">                &#123;</span><br><span class="line"></span><br><span class="line">                    Uri[] result;</span><br><span class="line">                    if (value != null)</span><br><span class="line">                        result = new Uri[]&#123;value&#125;;</span><br><span class="line">                    else</span><br><span class="line">                        result = null;</span><br><span class="line"></span><br><span class="line">                    finalFilePathCallback.onReceiveValue(result);</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            openFileChooser(vc, acceptType, &quot;filesystem&quot;);</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public interface CustomWebChromeClientCallBack</span><br><span class="line">&#123;</span><br><span class="line">    public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg);</span><br><span class="line">    </span><br><span class="line">    // For Android 3.0+</span><br><span class="line">    public void openFileChooser(ValueCallback&lt;Uri&gt; uploadFile, String acceptType);</span><br><span class="line"></span><br><span class="line">    // For Android &gt; 4.1.1</span><br><span class="line">    public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">public class BaseWebView extends WebView</span><br><span class="line">&#123;</span><br><span class="line">	private Context mContext;</span><br><span class="line"></span><br><span class="line">	public BaseWebView(Context context)</span><br><span class="line">	&#123;</span><br><span class="line">		super(context);</span><br><span class="line">		this.mContext = context;</span><br><span class="line">		init();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public BaseWebView(Context context, AttributeSet attrs)</span><br><span class="line">	&#123;</span><br><span class="line">		super(context, attrs);</span><br><span class="line">		this.mContext = context;</span><br><span class="line">		init();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public BaseWebView(Context context, AttributeSet attrs, int defStyle)</span><br><span class="line">	&#123;</span><br><span class="line">		super(context, attrs, defStyle);</span><br><span class="line">		this.mContext = context;</span><br><span class="line">		init();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@TargetApi(Build.VERSION_CODES.HONEYCOMB)</span><br><span class="line">	public BaseWebView(Context context, AttributeSet attrs, int defStyle, boolean privateBrowsing)</span><br><span class="line">	&#123;</span><br><span class="line">		super(context, attrs, defStyle, privateBrowsing);</span><br><span class="line">		this.mContext = context;</span><br><span class="line">		init();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	private void init()</span><br><span class="line">	&#123;</span><br><span class="line">		//开启调试模式</span><br><span class="line">		if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT)</span><br><span class="line">		&#123;</span><br><span class="line">			if (0 != (mContext.getApplicationInfo().flags &amp;= ApplicationInfo.FLAG_DEBUGGABLE))</span><br><span class="line">			&#123;</span><br><span class="line">				WebView.setWebContentsDebuggingEnabled(true);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>调用：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Bundle bundle = new Bundle();</span><br><span class="line">bundle.putString(&quot;func&quot;,&quot;login()&quot;);//js接口</span><br><span class="line">BaseWebActivity.startBaseWebActivity(mContext, MenuWebModel.class, url, bundle);</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/webview/" rel="tag"># webview</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/12/动态权限/" rel="next" title="动态权限">
+                <i class="fa fa-chevron-left"></i> 动态权限
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/22/spring学习/" rel="prev" title="Spring初探">
+                Spring初探 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="threetree" />
+            
+              <p class="site-author-name" itemprop="name">threetree</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">threetree</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
