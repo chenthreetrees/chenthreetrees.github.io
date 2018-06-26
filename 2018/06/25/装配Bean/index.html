@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Spring容器负责创建应用程序中的bean并通过DI来协调这些对象之间的关系。它提供了三种主要的装配机制：   在XML中进行显式配置  在java中进行显式配置 隐式的bean发现机制和自动装配   自动化装配beanSpring通过组件扫描和自动装配来实现自动化装配在类上面使用@Component注解告知Spring创建bean。如下：12345678910111213package sou">
+<meta name="description" content="Spring容器负责创建应用程序中的bean并通过DI来协调这些对象之间的关系。它提供了三种主要的装配机制：   在XML中进行显式配置  在java中进行显式配置 隐式的bean发现机制和自动装配">
 <meta name="keywords" content="Spring,Bean">
 <meta property="og:type" content="article">
 <meta property="og:title" content="装配Bean">
 <meta property="og:url" content="http://chenthreetrees.github.io/2018/06/25/装配Bean/index.html">
 <meta property="og:site_name" content="三木">
-<meta property="og:description" content="Spring容器负责创建应用程序中的bean并通过DI来协调这些对象之间的关系。它提供了三种主要的装配机制：   在XML中进行显式配置  在java中进行显式配置 隐式的bean发现机制和自动装配   自动化装配beanSpring通过组件扫描和自动装配来实现自动化装配在类上面使用@Component注解告知Spring创建bean。如下：12345678910111213package sou">
+<meta property="og:description" content="Spring容器负责创建应用程序中的bean并通过DI来协调这些对象之间的关系。它提供了三种主要的装配机制：   在XML中进行显式配置  在java中进行显式配置 隐式的bean发现机制和自动装配">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-26T03:23:37.366Z">
+<meta property="og:updated_time" content="2018-06-26T03:27:04.011Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="装配Bean">
-<meta name="twitter:description" content="Spring容器负责创建应用程序中的bean并通过DI来协调这些对象之间的关系。它提供了三种主要的装配机制：   在XML中进行显式配置  在java中进行显式配置 隐式的bean发现机制和自动装配   自动化装配beanSpring通过组件扫描和自动装配来实现自动化装配在类上面使用@Component注解告知Spring创建bean。如下：12345678910111213package sou">
+<meta name="twitter:description" content="Spring容器负责创建应用程序中的bean并通过DI来协调这些对象之间的关系。它提供了三种主要的装配机制：   在XML中进行显式配置  在java中进行显式配置 隐式的bean发现机制和自动装配">
 
 
 
@@ -375,7 +375,8 @@
 <ul>
 <li>在XML中进行显式配置 </li>
 <li>在java中进行显式配置</li>
-<li>隐式的bean发现机制和自动装配</li>
+<li>隐式的bean发现机制和自动装配<a id="more"></a>
+</li>
 </ul>
 </blockquote>
 <h2 id="自动化装配bean"><a href="#自动化装配bean" class="headerlink" title="自动化装配bean"></a>自动化装配bean</h2><p><strong>Spring通过组件扫描和自动装配来实现自动化装配</strong><br>在类上面使用@Component注解告知Spring创建bean。如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">package soundsystem;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">@Component</span><br><span class="line">public class SgtPeppers implements CompactDisc &#123;</span><br><span class="line">    private String title = &quot;hello&quot;;</span><br><span class="line">    private String artist = &quot;threetree&quot;;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public void play() &#123;</span><br><span class="line">        System.out.println(&quot;playing &quot; + title + &quot; by &quot; + artist);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -438,6 +439,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/26/资源/" rel="prev" title="资源">
+                资源 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -518,7 +523,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -529,7 +534,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -540,7 +545,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
