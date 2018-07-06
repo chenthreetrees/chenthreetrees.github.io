@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,ijkplayer," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这段时间研究视频播放功能，android系统自带的播放器功能少，支持的视频格式又有限制，只能放弃，网上一些成熟的第三方库商用后收费，几番寻找后发现免费的开源库ijkplayer，这是Bilibili的一款基于ffmpeg视频编解码库的轻量级Android/IOS播放器控件，Bilibili作为我大天朝最大异（tong）性交友平台，对开源界也是有贡献的。ijkplayer提供了录制、转换以及流化音视">
+<meta name="keywords" content="Android,ijkplayer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ijkplayer编译和使用">
+<meta property="og:url" content="http://chenthreetrees.github.io/2018/07/06/ijkplayer/index.html">
+<meta property="og:site_name" content="三木">
+<meta property="og:description" content="这段时间研究视频播放功能，android系统自带的播放器功能少，支持的视频格式又有限制，只能放弃，网上一些成熟的第三方库商用后收费，几番寻找后发现免费的开源库ijkplayer，这是Bilibili的一款基于ffmpeg视频编解码库的轻量级Android/IOS播放器控件，Bilibili作为我大天朝最大异（tong）性交友平台，对开源界也是有贡献的。ijkplayer提供了录制、转换以及流化音视">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/06/ijkplayer/ijkplayer.png">
+<meta property="og:updated_time" content="2018-07-06T08:54:34.522Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ijkplayer编译和使用">
+<meta name="twitter:description" content="这段时间研究视频播放功能，android系统自带的播放器功能少，支持的视频格式又有限制，只能放弃，网上一些成熟的第三方库商用后收费，几番寻找后发现免费的开源库ijkplayer，这是Bilibili的一款基于ffmpeg视频编解码库的轻量级Android/IOS播放器控件，Bilibili作为我大天朝最大异（tong）性交友平台，对开源界也是有贡献的。ijkplayer提供了录制、转换以及流化音视">
+<meta name="twitter:image" content="http://chenthreetrees.github.io/2018/07/06/ijkplayer/ijkplayer.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://chenthreetrees.github.io/2018/07/06/ijkplayer/"/>
+
+
+
+
+
+  <title>ijkplayer编译和使用 | 三木</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">三木</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">自从当年我背井离乡，乡里人就没喝过一口水</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-android">
+          <a href="/android/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-android"></i> <br />
+            
+            Android
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://chenthreetrees.github.io/2018/07/06/ijkplayer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="threetree">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三木">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ijkplayer编译和使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-06T14:23:25+08:00">
+                2018-07-06
+              </time>
+            
+
+            
+
+            
+          </span>
+		  
+		  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+			</script>
+			
+				<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv">
+				</span> 次</span>
+			
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/多媒体/" itemprop="url" rel="index">
+                    <span itemprop="name">多媒体</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这段时间研究视频播放功能，android系统自带的播放器功能少，<br>支持的视频格式又有限制，只能放弃，网上一些成熟的第三方库商用后收费，<br>几番寻找后发现免费的开源库ijkplayer，这是Bilibili的一款基于ffmpeg视频编解码库的<br>轻量级Android/IOS播放器控件，Bilibili作为我大天朝最大异（tong）性交友平台，对开源界也是有贡献的。<br>ijkplayer提供了录制、转换以及流化音视频的完整解决方案，<br>可以开发出弹幕，视频旋转，位移，缩放控制，视频宽高比例设置，视频进度等功能。<br>但实践过程中遇到了很多坑，官方文档又不详尽，比如视频的多种格式支持，cpu架构的兼容等问题。<br>网上编译的so库也是存在问题，无奈之下，只能自己重新去编译一遍ijkplayer的源码。<br><a id="more"></a></p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h3><p>linux环境：Ubuntu 18.04 （window下使用cygwin坑更多）<br>Android NDK：<a href="https://dl.google.com/android/repository/android-ndk-r14b-linux-x86_64.zip" target="_blank" rel="noopener">android-ndk-r14b</a><br>注意：此项目目前最高支持NDK14的版本，以上版本编译时报错：You need the NDKr9 or later<br>如果不能确定linux是64还是32位，打开终端：Ctrl+Alt+T，输入：sudo uname –m,结果为i686为32位，X86_64则为64位<br>Android SDK：<a href="http://tools.android-studio.org/index.php/sdk/" target="_blank" rel="noopener">选择Linux的版本</a></p>
+<h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><p><strong>方法一：（推荐）</strong><br>打开主文件夹目录，按Ctrl+H打开隐藏文件，找到.bashrc文件，打开<br>在最后加上你自己的android ndk和android sdk的路径，比如我的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ANDROID_NDK=/home/threetree/Downloads/android-ndk-r14b</span><br><span class="line">export ANDROID_NDK</span><br><span class="line">ANDROID_SDK=/home/threetree/Downloads/android-sdk-linux</span><br><span class="line">export ANDROID_SDK</span><br><span class="line">PATH=$&#123;PATH&#125;:$&#123;ANDROID_NDK&#125;:$&#123;ANDROID_SDK&#125;</span><br></pre></td></tr></table></figure></p>
+<p>保存完成</p>
+<p><strong>方法二</strong><br>在终端使用：sudo gedit /etc/profile（这里我遇到使用vi，vim指令打开文件进行修改，无法修改只读文件）<br>在配置文件末尾加入如下部分并保存：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PATH=~/Downloads/android-sdk-linux:$PATH</span><br><span class="line">export PATH=~/Downloads/android-ndk-r14b:$PATH</span><br></pre></td></tr></table></figure></p>
+<p>让环境变量立即生效<br><code>source /etc/profile</code></p>
+<p>测试sdk是否配置成功：<br><code>adb -version</code><br>如未安装adb，根据提示安装adb，安装完成后重复上面指令</p>
+<p>测试ndk是否配置成功：<br><code>ndk-build -v</code></p>
+<h3 id="安装若干软件"><a href="#安装若干软件" class="headerlink" title="安装若干软件"></a>安装若干软件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install openjdk-8-jre-headless</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install git</span><br><span class="line">sudo apt-get install yasm</span><br></pre></td></tr></table></figure>
+<h3 id="下载ijkplayer-android-最新版为k0-8-8"><a href="#下载ijkplayer-android-最新版为k0-8-8" class="headerlink" title="下载ijkplayer-android(最新版为k0.8.8)"></a>下载ijkplayer-android(最新版为k0.8.8)</h3><p>下载ijkplayer源代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd</span><br><span class="line">git clone https://github.com/Bilibili/ijkplayer.git ijkplayer-android</span><br><span class="line">cd ijkplayer-android</span><br><span class="line">git checkout -B latest k0.8.8</span><br></pre></td></tr></table></figure></p>
+<p>下载相关的android ffmpeg源代码：<br><code>./init-android.sh</code></p>
+<p>如果视频播放需要支持Https协议的还需要执行一遍如下初始化脚本：<br><code>./init-android-openssl.sh</code></p>
+<p>下载过程可能需要一段时间，去撸几局炉石传说吧~</p>
+<h2 id="开始编译"><a href="#开始编译" class="headerlink" title="开始编译"></a>开始编译</h2><p>如果视频播放不需要支持Https协议，可跳过这一步</p>
+<h3 id="编译各个平台的openssl"><a href="#编译各个平台的openssl" class="headerlink" title="编译各个平台的openssl"></a>编译各个平台的openssl</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd android/contrib</span><br><span class="line">./compile-openssl.sh clean</span><br></pre></td></tr></table></figure>
+<p>全平台编译：<br><code>./compile-openssl.sh all</code></p>
+<p>分平台编译：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">./compile-openssl.sh armv7a</span><br><span class="line">./compile-openssl.sh armv5</span><br><span class="line">./compile-openssl.sh arm64</span><br><span class="line">./compile-openssl.sh x86</span><br><span class="line">./compile-openssl.sh x86_64</span><br></pre></td></tr></table></figure></p>
+<h3 id="编译各个平台的ffmpeg（坑最多的就是这一步啦）"><a href="#编译各个平台的ffmpeg（坑最多的就是这一步啦）" class="headerlink" title="编译各个平台的ffmpeg（坑最多的就是这一步啦）"></a>编译各个平台的ffmpeg（坑最多的就是这一步啦）</h3><h4 id="选择解码包"><a href="#选择解码包" class="headerlink" title="选择解码包"></a>选择解码包</h4><p>根据官方的说法，我们根据需要选择解码包，<br>默认的情况是较少的codec/format,生成较小尺寸的包。<br>选择默认，可以跳过这一步。</p>
+<p>在默认基础上包含hevc功能，执行下面命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd ../..</span><br><span class="line">cd config/</span><br><span class="line">rm module.sh</span><br><span class="line">ln -s module-lite-hevc.sh module.sh</span><br></pre></td></tr></table></figure></p>
+<p>最多的codec/format,执行下面命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd ../..</span><br><span class="line">cd config/</span><br><span class="line">rm module.sh</span><br><span class="line">ln -s module-default.sh module.sh</span><br></pre></td></tr></table></figure></p>
+<h4 id="编译ffmpeg"><a href="#编译ffmpeg" class="headerlink" title="编译ffmpeg"></a>编译ffmpeg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ..</span><br><span class="line">cd android/contrib/</span><br><span class="line">./compile-ffmpeg.sh clean</span><br></pre></td></tr></table></figure>
+<p>选择平台,执行相应的命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">./compile-ffmpeg.sh all</span><br><span class="line">./compile-ffmpeg.sh armv7a</span><br><span class="line">./compile-ffmpeg.sh armv5</span><br><span class="line">./compile-ffmpeg.sh arm64</span><br><span class="line">./compile-ffmpeg.sh x86</span><br><span class="line">./compile-ffmpeg.sh x86_64</span><br></pre></td></tr></table></figure></p>
+<p>如果一切顺利，恭喜你</p>
+<p>如报错：fatal error: linux/perf_event.h: No such file or directory<br>执行：<code>$ vim ~/ijkplayer-android/config/module.sh</code><br>在结尾加入这一行：<br><code>export COMMON_FF_CFG_FLAGS=&quot;$COMMON_FF_CFG_FLAGS --disable-linux-perf&quot;</code><br>保存后重新clean，重新编译</p>
+<p>如报错：ERROR: Failed to create toolchain.<br><code>sudo apt-get install python</code><br>安装python后再执行编译即可</p>
+<h3 id="编译ijkplayer-native代码"><a href="#编译ijkplayer-native代码" class="headerlink" title="编译ijkplayer native代码"></a>编译ijkplayer native代码</h3><p>选择平台,执行相应的命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">./compile-ijk.sh all</span><br><span class="line">./compile-ijk.sh armv7a</span><br><span class="line">./compile-ijk.sh armv5a</span><br><span class="line">./compile-ijk.sh arm64</span><br><span class="line">./compile-ijk.sh x86</span><br><span class="line">./compile-ijk.sh x86_64</span><br></pre></td></tr></table></figure></p>
+<p>编译好后就能在android/ijkplayer目录中,找到libs<br>里面就是我们需要的编译好的so库</p>
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p>开始精简工程，将官方demo里相关的文件拿来使用<br>找到下载好的ijkplayer源码，找到目录android-》ijkplayer-》ijkplayer-example<br>找到里面的java源码，根据下图文件，导入到我们自己的工程：<br><img src="ijkplayer.png" alt="ijkplayer"></p>
+<p>接下来把我们编译好的so库文件引入到相应cpu架构的文件夹下面</p>
+<p>稍微配置下gradle：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    compileSdkVersion 25</span><br><span class="line">    buildToolsVersion &quot;25.0.3&quot;</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        applicationId &quot;com.muyan.ijk&quot;</span><br><span class="line">        minSdkVersion 15</span><br><span class="line">        targetSdkVersion 25</span><br><span class="line">        versionCode 1</span><br><span class="line">        versionName &quot;1.0&quot;</span><br><span class="line">        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;</span><br><span class="line">        ndk &#123;</span><br><span class="line">            //设置支持的SO库架构</span><br><span class="line">            abiFilters &quot;armeabi-v7a&quot;, &quot;x86&quot;,&quot;arm64-v8a&quot;,&quot;x86_64&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled false</span><br><span class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    sourceSets &#123;</span><br><span class="line">        main &#123;</span><br><span class="line">            jniLibs.srcDirs = [&apos;libs&apos;]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>根据平台，添加相应的依赖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    compile &apos;tv.danmaku.ijk.media:ijkplayer-java:0.8.8&apos;</span><br><span class="line">    compile &apos;tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8&apos;</span><br><span class="line">    compile &apos;tv.danmaku.ijk.media:ijkplayer-exo:0.8.8&apos;</span><br><span class="line"></span><br><span class="line">//    compile &apos;tv.danmaku.ijk.media:ijkplayer-armv5:0.8.8&apos;</span><br><span class="line">//    compile &apos;tv.danmaku.ijk.media:ijkplayer-arm64:0.8.8&apos;</span><br><span class="line">//    compile &apos;tv.danmaku.ijk.media:ijkplayer-x86:0.8.8&apos;</span><br><span class="line">//    compile &apos;tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.8&apos;</span><br></pre></td></tr></table></figure></p>
+<p>简单的使用IjkVideoView:<br>xml:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot;&gt;</span><br><span class="line">    &lt;!--播放控件 IjkVideoView --&gt;</span><br><span class="line">    &lt;com.muyan.ijk.media.IjkVideoView</span><br><span class="line">        android:id=&quot;@+id/video_view&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot; /&gt;</span><br><span class="line">&lt;/RelativeLayout&gt;</span><br></pre></td></tr></table></figure></p>
+<p>javaCode:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">		mVideoView = (IjkVideoView) findViewById(R.id.video_view);</span><br><span class="line">		</span><br><span class="line">        /** 普通播放 start **/</span><br><span class="line">        mVideoView.setAspectRatio(IRenderView.AR_ASPECT_FIT_PARENT);</span><br><span class="line">		</span><br><span class="line">		String url5 = &quot;http://stream1.grtn.cn/tvs2/sd/live.m3u8?_ts&amp;time=1518428696629&quot;;</span><br><span class="line">//      mVideoView.setVideoURI(Uri.parse(url5));//播放流</span><br><span class="line"></span><br><span class="line">        String name = &quot;city.avi&quot;;</span><br><span class="line">//      String name = &quot;mars2.mp4&quot;;</span><br><span class="line">//		String name =  &quot;dog.flv&quot;</span><br><span class="line">        mVideoView.setVideoPath(FileUtil.getAdFilePath(name));//播放本地视频</span><br><span class="line">		</span><br><span class="line">        mVideoView.start();</span><br></pre></td></tr></table></figure></p>
+<p>这一切之后，简单的播放多种格式视频的demo就跑起来了，<br>接下来，根据业务以及ijkplayer相关的api开始开发吧</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/ijkplayer/" rel="tag"># ijkplayer</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/26/资源/" rel="next" title="资源">
+                <i class="fa fa-chevron-left"></i> 资源
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="threetree" />
+            
+              <p class="site-author-name" itemprop="name">threetree</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#系统环境"><span class="nav-number">1.1.</span> <span class="nav-text">系统环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置环境变量"><span class="nav-number">1.2.</span> <span class="nav-text">配置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装若干软件"><span class="nav-number">1.3.</span> <span class="nav-text">安装若干软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载ijkplayer-android-最新版为k0-8-8"><span class="nav-number">1.4.</span> <span class="nav-text">下载ijkplayer-android(最新版为k0.8.8)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始编译"><span class="nav-number">2.</span> <span class="nav-text">开始编译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编译各个平台的openssl"><span class="nav-number">2.1.</span> <span class="nav-text">编译各个平台的openssl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译各个平台的ffmpeg（坑最多的就是这一步啦）"><span class="nav-number">2.2.</span> <span class="nav-text">编译各个平台的ffmpeg（坑最多的就是这一步啦）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#选择解码包"><span class="nav-number">2.2.1.</span> <span class="nav-text">选择解码包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译ffmpeg"><span class="nav-number">2.2.2.</span> <span class="nav-text">编译ffmpeg</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译ijkplayer-native代码"><span class="nav-number">2.3.</span> <span class="nav-text">编译ijkplayer native代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始使用"><span class="nav-number">3.</span> <span class="nav-text">开始使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">threetree</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
