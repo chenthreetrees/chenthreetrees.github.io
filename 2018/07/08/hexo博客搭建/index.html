@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="博客搭建,hexo," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Hexo是一款基于Node.js的静态博客框架，可以deploy到Github上。  优点：   生成静态页面快， 支持markdown 兼容windows，mac和linux系统 部署方便,日常使用仅需五个命令 高扩展性、自订性，文件少、小，易理解   准备工作安装Node.js 下载相应系统的Node.js 本文选的是windows版本，安装，一路next。 设置环境变量   验证是否安装成">
+<meta name="keywords" content="博客搭建,hexo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo博客搭建">
+<meta property="og:url" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/index.html">
+<meta property="og:site_name" content="三木">
+<meta property="og:description" content="Hexo是一款基于Node.js的静态博客框架，可以deploy到Github上。  优点：   生成静态页面快， 支持markdown 兼容windows，mac和linux系统 部署方便,日常使用仅需五个命令 高扩展性、自订性，文件少、小，易理解   准备工作安装Node.js 下载相应系统的Node.js 本文选的是windows版本，安装，一路next。 设置环境变量   验证是否安装成">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/nodejs环境变量.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/nodejs版本.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/启动hexo.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/github新建库.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/github库命名.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/github设置.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/github创建pages.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/ssh1.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/ssh2.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/ssh3.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/阿里云cname.png">
+<meta property="og:updated_time" content="2018-07-08T16:57:43.580Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hexo博客搭建">
+<meta name="twitter:description" content="Hexo是一款基于Node.js的静态博客框架，可以deploy到Github上。  优点：   生成静态页面快， 支持markdown 兼容windows，mac和linux系统 部署方便,日常使用仅需五个命令 高扩展性、自订性，文件少、小，易理解   准备工作安装Node.js 下载相应系统的Node.js 本文选的是windows版本，安装，一路next。 设置环境变量   验证是否安装成">
+<meta name="twitter:image" content="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/nodejs环境变量.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/"/>
+
+
+
+
+
+  <title>hexo博客搭建 | 三木</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">三木</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">自从当年我背井离乡，乡里人就没喝过一口水</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-android">
+          <a href="/android/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-android"></i> <br />
+            
+            Android
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://chenthreetrees.github.io/2018/07/08/hexo博客搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="threetree">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三木">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">hexo博客搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-08T22:20:49+08:00">
+                2018-07-08
+              </time>
+            
+
+            
+
+            
+          </span>
+		  
+		  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+			</script>
+			
+				<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv">
+				</span> 次</span>
+			
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/其他/" itemprop="url" rel="index">
+                    <span itemprop="name">其他</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p> Hexo是一款基于Node.js的静态博客框架，可以deploy到Github上。</p>
+<p> 优点：</p>
+<blockquote>
+<ul>
+<li>生成静态页面快，</li>
+<li>支持markdown</li>
+<li>兼容windows，mac和linux系统</li>
+<li>部署方便,日常使用仅需五个命令</li>
+<li>高扩展性、自订性，文件少、小，易理解</li>
+</ul>
+</blockquote>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h3><p> 下载相应系统的<a href="http://nodejs.cn/download/" target="_blank" rel="noopener">Node.js</a><br> 本文选的是windows版本，安装，一路next。<br> 设置环境变量<br> <img src="nodejs环境变量.png" alt="nodejs环境变量"></p>
+<p> 验证是否安装成功<br> <img src="nodejs版本.png" alt="nodejs版本"></p>
+<h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><p> 没有什么技术含量，<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137396287703354d8c6c01c904c7d9ff056ae23da865a000" target="_blank" rel="noopener">传送门</a></p>
+<h3 id="使用npm安装Hexo"><a href="#使用npm安装Hexo" class="headerlink" title="使用npm安装Hexo"></a>使用npm安装Hexo</h3><p> npm其实是Node.js的包管理工具<br> npm已经在Node.js安装的时候顺带装好了<br> 通过命令行查看<code>npm -v</code></p>
+<p> 安装Hexo<br> <code>npm install -g hexo-cli</code></p>
+<p> 输入<code>hexo -v</code>，检查hexo是否安装成功</p>
+<p> <strong>新建一个文件夹 blog 用来存放博客</strong></p>
+<p> cd到blog目录，或者在该目录右键打开git命令行窗口</p>
+<p> 输入<code>hexo init</code>，初始化该文件夹（需要点时间）</p>
+<p> 输入<code>npm install</code>，安装所需要的组件</p>
+<h2 id="启动hexo"><a href="#启动hexo" class="headerlink" title="启动hexo"></a>启动hexo</h2><p> 输入<code>hexo g</code>，生成hexo静态页面</p>
+<p> 输入hexo s，开启服务器，访问该网址，正式体验Hexo<br> <img src="启动hexo.png" alt="启动hexo"></p>
+<p> 如果你能看到hexo默认的hello world网页，恭喜你第一步成功了。</p>
+<h2 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h2><p> 如果你要将博客部署到github上，请完成下面的过程：</p>
+<h3 id="创建github-pages"><a href="#创建github-pages" class="headerlink" title="创建github pages"></a>创建github pages</h3><p> <a href="https://github.com/" target="_blank" rel="noopener">github官网</a>注册帐号<br> <strong>新建库，名字为 ： xxx.github.io </strong><br> <strong>注意：xxx为你的用户名</strong><br> <img src="github新建库.png" alt="github新建库"><br> <img src="github库命名.png" alt="github库命名"><br> <img src="github设置.png" alt="github设置"><br> <img src="github创建pages.png" alt="github创建pages"></p>
+<h3 id="配置SSH"><a href="#配置SSH" class="headerlink" title="配置SSH"></a>配置SSH</h3><p> 生成SSH Key<br> <code>ssh-keygen -t rsa -C &quot;youremail@example&quot; #将邮箱换成自己的</code></p>
+<p> 一路回车之后就生成了自己的SSH Key。<br> 默认保存在用户主目录的.ssh目录下。<br> .ssh目录下有 id_rsa 和id_rsa.pub 两个文件。<br> 这两个就是SSH Key的秘钥对。id_rsa 是私钥，id_rsa.pub 是公钥。</p>
+<p> 登录Github，点击头像下的settings，添加ssh<br> <img src="ssh1.png" alt="ssh1"></p>
+<p> 找到之前生成的SSH Key 的公钥 id_rsa.pub<br> 打开id_rsa.pub，将里面的内容添加到key，<br> title输一个自己喜欢的即可。<br> <img src="ssh2.png" alt="ssh2"></p>
+<p> 输入`ssh -T <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>~，测试添加ssh是否成功</p>
+<h3 id="配置Deployment"><a href="#配置Deployment" class="headerlink" title="配置Deployment"></a>配置Deployment</h3><p> 在biog根目录下，打开_config.yml文件，修改repo值（在末尾）<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:chenthreetrees/chenthreetrees.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure></p>
+<p> repo值是你在github项目里的ssh（右下角）<br> <img src="ssh3.png" alt="ssh3"></p>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p> 在生成以及部署文章之前，需要安装一个扩展<br> <code>npm install hexo-deployer-git --save</code></p>
+<p> 生成静态页面<code>hexo g</code><br> 部署<code>hexo d</code></p>
+<p> 部署成功后访问你的地址：http://用户名.github.io</p>
+<h2 id="绑定域名"><a href="#绑定域名" class="headerlink" title="绑定域名"></a>绑定域名</h2><p> 设置阿里云CNAME映射<br> <img src="阿里云cname.png" alt="阿里云cname"></p>
+<p> 在biog根目录下，找到public目录，即生成的静态页面文件目录，<br> 在该目录下创建一个名为CNAME的文件，<strong>注意不需要后缀</strong></p>
+<p> 重新部署，就可以用你的域名来访问了</p>
+<h2 id="更换主题"><a href="#更换主题" class="headerlink" title="更换主题"></a>更换主题</h2><p> 上面看到的默认主题，可能不是我们喜欢的，<br> github上有大量的主题可供选择，这里选择使用next主题</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/博客搭建/" rel="tag"># 博客搭建</a>
+          
+            <a href="/tags/hexo/" rel="tag"># hexo</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/06/ijkplayer/" rel="next" title="ijkplayer编译和使用">
+                <i class="fa fa-chevron-left"></i> ijkplayer编译和使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="threetree" />
+            
+              <p class="site-author-name" itemprop="name">threetree</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Node-js"><span class="nav-number">1.1.</span> <span class="nav-text">安装Node.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装git"><span class="nav-number">1.2.</span> <span class="nav-text">安装git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用npm安装Hexo"><span class="nav-number">1.3.</span> <span class="nav-text">使用npm安装Hexo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动hexo"><span class="nav-number">2.</span> <span class="nav-text">启动hexo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署到github"><span class="nav-number">3.</span> <span class="nav-text">部署到github</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建github-pages"><span class="nav-number">3.1.</span> <span class="nav-text">创建github pages</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置SSH"><span class="nav-number">3.2.</span> <span class="nav-text">配置SSH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置Deployment"><span class="nav-number">3.3.</span> <span class="nav-text">配置Deployment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署"><span class="nav-number">3.4.</span> <span class="nav-text">部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绑定域名"><span class="nav-number">4.</span> <span class="nav-text">绑定域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更换主题"><span class="nav-number">5.</span> <span class="nav-text">更换主题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">threetree</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
