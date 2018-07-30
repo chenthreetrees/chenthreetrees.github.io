@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="HTTP,图片下载," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="该框架使用retrofit2.0+rxAndroid进行封装，该框架主要特性：   统一管理网络请求接口 支持请求结果的自定义数据结构 统一的异常拦截处理，对特殊异常也可以单独处理 支持文件带进度下载 支持自定义网络拦截器（log输出，头部参数处理等） 提供请求等待的加载动画入口   Retrofit中http POST/GET请求(结合了rx)Retrofit中的网络请求都是通过注解方式的接口方">
+<meta name="keywords" content="HTTP,图片下载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http框架">
+<meta property="og:url" content="http://chenthreetrees.github.io/2018/07/30/http框架/index.html">
+<meta property="og:site_name" content="三木">
+<meta property="og:description" content="该框架使用retrofit2.0+rxAndroid进行封装，该框架主要特性：   统一管理网络请求接口 支持请求结果的自定义数据结构 统一的异常拦截处理，对特殊异常也可以单独处理 支持文件带进度下载 支持自定义网络拦截器（log输出，头部参数处理等） 提供请求等待的加载动画入口   Retrofit中http POST/GET请求(结合了rx)Retrofit中的网络请求都是通过注解方式的接口方">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-30T08:20:26.235Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="http框架">
+<meta name="twitter:description" content="该框架使用retrofit2.0+rxAndroid进行封装，该框架主要特性：   统一管理网络请求接口 支持请求结果的自定义数据结构 统一的异常拦截处理，对特殊异常也可以单独处理 支持文件带进度下载 支持自定义网络拦截器（log输出，头部参数处理等） 提供请求等待的加载动画入口   Retrofit中http POST/GET请求(结合了rx)Retrofit中的网络请求都是通过注解方式的接口方">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://chenthreetrees.github.io/2018/07/30/http框架/"/>
+
+
+
+
+
+  <title>http框架 | 三木</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">三木</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">自从当年我背井离乡，乡里人就没喝过一口水</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-android">
+          <a href="/android/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-android"></i> <br />
+            
+            Android
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://chenthreetrees.github.io/2018/07/30/http框架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="threetree">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三木">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">http框架</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-30T14:14:05+08:00">
+                2018-07-30
+              </time>
+            
+
+            
+
+            
+          </span>
+		  
+		  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+			</script>
+			
+				<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv">
+				</span> 次</span>
+			
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/封装/" itemprop="url" rel="index">
+                    <span itemprop="name">封装</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>该框架使用retrofit2.0+rxAndroid进行封装，该框架主要特性：</p>
+<blockquote>
+<ul>
+<li>统一管理网络请求接口</li>
+<li>支持请求结果的自定义数据结构</li>
+<li>统一的异常拦截处理，对特殊异常也可以单独处理</li>
+<li>支持文件带进度下载</li>
+<li>支持自定义网络拦截器（log输出，头部参数处理等）</li>
+<li>提供请求等待的加载动画入口</li>
+</ul>
+</blockquote>
+<h2 id="Retrofit中http-POST-GET请求-结合了rx"><a href="#Retrofit中http-POST-GET请求-结合了rx" class="headerlink" title="Retrofit中http POST/GET请求(结合了rx)"></a>Retrofit中http POST/GET请求(结合了rx)</h2><p>Retrofit中的网络请求都是通过注解方式的接口方法来表示的,此处只对常用的post和get请求进行说明，<br>Retrofit还提供有put，delete等请求方式可自己研究官方文档使用。</p>
+<h3 id="post请求"><a href="#post请求" class="headerlink" title="post请求"></a>post请求</h3><p>Body对象作为post参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@POST(&quot;user/login&quot;)</span><br><span class="line">Observable&lt;User&gt; login(@Body LoginInfo loginInfo);</span><br></pre></td></tr></table></figure></p>
+<p>Field方式(常用):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@FormUrlEncoded</span><br><span class="line">@POST(&quot;user/login&quot;)</span><br><span class="line">Observable&lt;User&gt; login(@Field(&quot;username&quot;) String username,</span><br><span class="line">                 @Field(password) String password);</span><br></pre></td></tr></table></figure></p>
+<p>FieldMap方式:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@FormUrlEncoded</span><br><span class="line">@POST(&quot;user/login&quot;)</span><br><span class="line">Call&lt;User&gt; login(@FieldMap Map&lt;String,String&gt; map);</span><br></pre></td></tr></table></figure></p>
+<p>参数较多时建议用Body方式和FieldMap方式</p>
+<h3 id="get请求"><a href="#get请求" class="headerlink" title="get请求"></a>get请求</h3><p>直接请求某一地址获取列表:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@GET(&quot;order/orderList&quot;)</span><br><span class="line">Observable&lt;List&lt;Order&gt;&gt; getOrderList();</span><br></pre></td></tr></table></figure></p>
+<p>url拼接固定查询条件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@GET(&quot;order/orderList?id=2130&quot;)</span><br><span class="line">Observable&lt;List&lt;Order&gt;&gt; getOrderList();</span><br></pre></td></tr></table></figure></p>
+<p>url中拼接地址信息:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@GET(&quot;order/&#123;city&#125;/orderList&quot;)</span><br><span class="line">Observable&lt;List&lt;Order&gt;&gt; getOrderList(@Path(&quot;city&quot;) String city);</span><br></pre></td></tr></table></figure></p>
+<p>通过Query注解添加其他查询条件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@GET(&quot;order/&#123;city&#125;/orderList&quot;)</span><br><span class="line">Observable&lt;List&lt;Order&gt;&gt; getOrderList(@Path(&quot;city&quot;) String city</span><br><span class="line">									@Query(&quot;date&quot;) String date</span><br><span class="line">                                    @Query(&quot;type&quot;) String type);</span><br></pre></td></tr></table></figure></p>
+<p>查询条件较多时同样有QueryMap注解方法供使用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@GET(&quot;order/&#123;city&#125;/orderList&quot;)</span><br><span class="line">Observable&lt;List&lt;Order&gt;&gt; getOrderList(@Path(&quot;city&quot;) String city</span><br><span class="line">									@QueryMap&lt;String, String&gt; options);</span><br></pre></td></tr></table></figure></p>
+<h3 id="Header请求头设置"><a href="#Header请求头设置" class="headerlink" title="Header请求头设置"></a>Header请求头设置</h3><p>为请求添加固定请求头:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//添加单个固定请求头</span><br><span class="line">@Header(&quot;Cache-Control: max-aget-640000&quot;)</span><br><span class="line">@GET(&quot;order/orderList&quot;)</span><br><span class="line">Observable&lt;List&lt;Order&gt;&gt; getOrderList();</span><br><span class="line"></span><br><span class="line">//多个请求头以数组的形式提交</span><br><span class="line">@Header(</span><br><span class="line">    &#123;&quot;Accept: application/json&quot;,</span><br><span class="line">    &quot;User-Agent: Retrofit-Sample-App&quot;</span><br><span class="line">    &#125;)</span><br><span class="line">@GET(&quot;order/orderList&quot;)</span><br><span class="line">Observable&lt;List&lt;Order&gt;&gt; getOrderList();</span><br></pre></td></tr></table></figure></p>
+<p>动态添加请求头:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@GET(&quot;order/orderList&quot;)</span><br><span class="line">Observable&lt;List&lt;Order&gt;&gt; getOrderList(@Header(Authorization) String authorization);</span><br></pre></td></tr></table></figure></p>
+<p>上面的两种添加请求头的方法作用范围只是添加注解的单个方法，<br>如果为每个请求都添加头部，可以通过使用拦截器来实现,如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class HttpInterceptor implements Interceptor &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public Response intercept(Chain chain) throws IOException</span><br><span class="line">    &#123;</span><br><span class="line">        Request request = chain.request()</span><br><span class="line">                .newBuilder()</span><br><span class="line">                .addHeader(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded; charset=UTF-8&quot;)</span><br><span class="line">                .addHeader(&quot;X-SIGN&quot;, &quot;5df4gfwe5gag5s5g55a&quot;)</span><br><span class="line">                .addHeader(&quot;X-VERSION&quot;, &quot;&quot;+ BuildConfig.VERSION_CODE)</span><br><span class="line">                .addHeader(&quot;X-MECHINE&quot;, &quot;2&quot;)</span><br><span class="line">                .addHeader(&quot;MEMBERID&quot;, &quot;1&quot;)</span><br><span class="line">                .build();</span><br><span class="line">        Response response = chain.proceed(request);</span><br><span class="line">        return response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h2><h3 id="业务请求"><a href="#业务请求" class="headerlink" title="业务请求"></a>业务请求</h3><p>具体的业务请求类继承HttpPresenter，传入一些配置参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class DocPresenter extends HttpPresenter &#123;</span><br><span class="line">    private ApiService mApi;</span><br><span class="line">    public DocPresenter(ILoadingView iLoadingView)</span><br><span class="line">    &#123;</span><br><span class="line">        super(iLoadingView);</span><br><span class="line">        //这里传入baseURL，拦截器，定义接口的类</span><br><span class="line">        mApi = RetrofitManager.getInstence().getRetrofitService(&quot;your baseUrl&quot;,</span><br><span class="line">                new HttpInterceptor(),ApiService.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 网络请求的具体实现</span><br><span class="line">     */</span><br><span class="line">    public void getDoc()</span><br><span class="line">    &#123;</span><br><span class="line">        Observable observable = mApi.getDoc(1,4);//调用接口</span><br><span class="line">        subscribeHttp(observable, new IHttpResultListener&lt;String&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onSuccess(String s)</span><br><span class="line">            &#123;</span><br><span class="line">                //请求成功，判断下页面是否还是active，防止因为页面被回收而出现空指针异常</span><br><span class="line">                if(mLoadingView.isActive())</span><br><span class="line">                    mLoadingView.toast(0,s);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public boolean onError(int i, String s)</span><br><span class="line">            &#123;</span><br><span class="line">                //错误或者异常处理，如果要拦截则返回true，否则框架统一处理</span><br><span class="line">                return false;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在需要使用的地方调用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">DocPresenter docPresenter = new DocPresenter(new ILoadingView() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void showLoading(boolean isCancel)</span><br><span class="line">            &#123;</span><br><span class="line">				//显示加载框</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void dismissLoading()</span><br><span class="line">            &#123;</span><br><span class="line">				//隐藏加载框</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public boolean isActive()</span><br><span class="line">            &#123;</span><br><span class="line">			//页面是否激活，建议在页面创建的时候返回true，在页面关闭的时候返回false</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码看起来还是不够简洁，建议根据业务需求进一步封装基类</p>
+<h3 id="文件下载"><a href="#文件下载" class="headerlink" title="文件下载"></a>文件下载</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">DownLoadPresenter presenter = new DownLoadPresenter(new IProgressView() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void start()</span><br><span class="line">    &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void error(int i, String s)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void progress(long progress, long total, float speed)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void success()</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125; </span><br><span class="line">&#125;, &quot;your baseUrl&quot;);</span><br><span class="line">presenter.setFileDir(FileUtil.ROOT_PATH);</span><br><span class="line">presenter.setDestFileName(FileUtil.NAME);</span><br><span class="line">presenter.download(&quot;http://upload.cbg.cn/2016/0726/1469533389366.jpg&quot;);</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：记得在页面关闭的时候调用HttpPresenter的destroy()</p>
+<h2 id="更多设置"><a href="#更多设置" class="headerlink" title="更多设置"></a>更多设置</h2><p>如果需要在异常处理之前，做一些特殊的处理，可以通过重写以下函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">protected boolean handleError(ApiException ex)</span><br><span class="line">&#123;</span><br><span class="line">    return false;//若拦截了返回true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>异常统一处理，需要重写该函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">protected void showError(ApiException ex)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此框架默认的请求结果的数据结构，默认采用如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class Result&lt;T&gt; &#123;</span><br><span class="line">    public boolean success;</span><br><span class="line">    public String errorMessage;</span><br><span class="line">    public int errorCode;</span><br><span class="line">    public T data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果和该结构不同，可以通过重写以下函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">protected &lt;T&gt;Observable mapResult(Observable observable)</span><br><span class="line">&#123;</span><br><span class="line">    return observable.map(new Function&lt;Result&lt;T&gt;, T&gt;() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public T apply(@NonNull Result&lt;T&gt; result) throws Exception</span><br><span class="line">        &#123;</span><br><span class="line">//处理请求数据，如果不成功，则通过service异常来处理 </span><br><span class="line">            if (!result.success) &#123;</span><br><span class="line">                throw new ServerException(result.errorCode, result.errorMessage);</span><br><span class="line">            &#125;</span><br><span class="line">            return result.data;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其他的设置或者修改，请参考demo和源码</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat_reward.jpg" alt="threetree 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HTTP/" rel="tag"># HTTP</a>
+          
+            <a href="/tags/图片下载/" rel="tag"># 图片下载</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/27/沉浸式状态栏Fragment/" rel="next" title="沉浸式状态栏Fragment">
+                <i class="fa fa-chevron-left"></i> 沉浸式状态栏Fragment
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="threetree" />
+            
+              <p class="site-author-name" itemprop="name">threetree</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Retrofit中http-POST-GET请求-结合了rx"><span class="nav-number">1.</span> <span class="nav-text">Retrofit中http POST/GET请求(结合了rx)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#post请求"><span class="nav-number">1.1.</span> <span class="nav-text">post请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#get请求"><span class="nav-number">1.2.</span> <span class="nav-text">get请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Header请求头设置"><span class="nav-number">1.3.</span> <span class="nav-text">Header请求头设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单使用"><span class="nav-number">2.</span> <span class="nav-text">简单使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#业务请求"><span class="nav-number">2.1.</span> <span class="nav-text">业务请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件下载"><span class="nav-number">2.2.</span> <span class="nav-text">文件下载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多设置"><span class="nav-number">3.</span> <span class="nav-text">更多设置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">threetree</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
