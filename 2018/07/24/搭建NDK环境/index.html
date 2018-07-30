@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NDK,JNI," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一些简单的说明： JNI（Java Native Interface）：Java本地接口。是为了方便Java调用c、c++等本地代码所封装的一层接口（也是一个标准）。 NDK（Native Development Kit） : 原生开发工具包，即帮助开发原生代码的一系列工具，包括但不限于编译工具、一些公共库、开发IDE等。 CMake:脱离 Android 开发来看，c/c++ 的编译文件在不同平">
+<meta name="keywords" content="NDK,JNI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android调用JNI">
+<meta property="og:url" content="http://chenthreetrees.github.io/2018/07/24/搭建NDK环境/index.html">
+<meta property="og:site_name" content="三木">
+<meta property="og:description" content="一些简单的说明： JNI（Java Native Interface）：Java本地接口。是为了方便Java调用c、c++等本地代码所封装的一层接口（也是一个标准）。 NDK（Native Development Kit） : 原生开发工具包，即帮助开发原生代码的一系列工具，包括但不限于编译工具、一些公共库、开发IDE等。 CMake:脱离 Android 开发来看，c/c++ 的编译文件在不同平">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/24/搭建NDK环境/abi.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/24/搭建NDK环境/下载NDK.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/24/搭建NDK环境/配置NDK路径.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/24/搭建NDK环境/c++项目.png">
+<meta property="og:image" content="http://chenthreetrees.github.io/2018/07/24/搭建NDK环境/c++项目2.png">
+<meta property="og:updated_time" content="2018-07-30T02:35:27.152Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android调用JNI">
+<meta name="twitter:description" content="一些简单的说明： JNI（Java Native Interface）：Java本地接口。是为了方便Java调用c、c++等本地代码所封装的一层接口（也是一个标准）。 NDK（Native Development Kit） : 原生开发工具包，即帮助开发原生代码的一系列工具，包括但不限于编译工具、一些公共库、开发IDE等。 CMake:脱离 Android 开发来看，c/c++ 的编译文件在不同平">
+<meta name="twitter:image" content="http://chenthreetrees.github.io/2018/07/24/搭建NDK环境/abi.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://chenthreetrees.github.io/2018/07/24/搭建NDK环境/"/>
+
+
+
+
+
+  <title>Android调用JNI | 三木</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">三木</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">自从当年我背井离乡，乡里人就没喝过一口水</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-android">
+          <a href="/android/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-android"></i> <br />
+            
+            Android
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://chenthreetrees.github.io/2018/07/24/搭建NDK环境/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="threetree">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三木">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android调用JNI</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-24T14:20:38+08:00">
+                2018-07-24
+              </time>
+            
+
+            
+
+            
+          </span>
+		  
+		  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+			</script>
+			
+				<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv">
+				</span> 次</span>
+			
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/NDK/" itemprop="url" rel="index">
+                    <span itemprop="name">NDK</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一些简单的说明：</p>
+<p><strong>JNI</strong>（Java Native Interface）：Java本地接口。是为了方便Java调用c、c++等本地代码所封装的一层接口（也是一个标准）。</p>
+<p><strong>NDK</strong>（Native Development Kit） : 原生开发工具包，即帮助开发原生代码的一系列工具，包括但不限于编译工具、一些公共库、开发IDE等。</p>
+<p><strong>CMake</strong>:脱离 Android 开发来看，c/c++ 的编译文件在不同平台是不一样的。<br>Unix 下会使用 makefile 文件编译，Windows 下会使用 project 文件编译。<br>而 CMake 则是一个跨平台的编译工具，它并不会直接编译出对象，<br>而是根据自定义的语言规则（CMakeLists.txt）生成对应 makefile 或 project 文件，然后再调用底层的编译。<br><a id="more"></a><br>在Android Studio 2.2 之后，工具中增加了CMake的支持，<br>你可以这么认为，在 Android Studio 2.2 之后你有2种选择来编译你写的 c/c++ 代码。<br>一个是 ndk-build + Android.mk + Application.mk 组合，另一个是 CMake + CMakeLists.txt 组合。<br>这2个组合与Android代码和c/c++代码无关，只是不同的构建脚本和构建命令。<br>本篇文章主要会描述后者的组合。（也是Android现在主推的）</p>
+<p><strong>ABI</strong>（Application binary interface）应用程序二进制接口。<br>不同的CPU与指令集的每种组合都有定义的 ABI (应用程序二进制接口)，一段程序只有遵循这个接口规范才能在该 CPU 上运行，<br>所以同样的程序代码为了兼容多个不同的CPU，需要为不同的 ABI 构建不同的库文件。<br>当然对于CPU来说，不同的架构并不意味着一定互不兼容，如下图：<br><img src="abi.png" alt=""></p>
+<h2 id="NDK配置"><a href="#NDK配置" class="headerlink" title="NDK配置"></a>NDK配置</h2><h3 id="下载NDK"><a href="#下载NDK" class="headerlink" title="下载NDK"></a>下载NDK</h3><p><img src="下载NDK.png" alt=""></p>
+<h3 id="配置NDK路径"><a href="#配置NDK路径" class="headerlink" title="配置NDK路径"></a>配置NDK路径</h3><p><img src="配置NDK路径.png" alt=""></p>
+<h3 id="配置NDK环境变量"><a href="#配置NDK环境变量" class="headerlink" title="配置NDK环境变量"></a>配置NDK环境变量</h3><p>程序员都懂</p>
+<h3 id="设置as"><a href="#设置as" class="headerlink" title="设置as"></a>设置as</h3><p>将ndk版本差异检测过滤掉，要不然项目无法编译。添加：android.useDeprecatedNdk=true </p>
+<h2 id="编写代码"><a href="#编写代码" class="headerlink" title="编写代码"></a>编写代码</h2><h3 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h3><p><img src="c++项目.png" alt=""></p>
+<p><img src="c++项目2.png" alt=""></p>
+<h3 id="编写调用c的java代码"><a href="#编写调用c的java代码" class="headerlink" title="编写调用c的java代码"></a>编写调用c的java代码</h3><p>注意：这里如果方法名报错，不用管他。</p>
+<h3 id="生成调用本地方法的-h头文件"><a href="#生成调用本地方法的-h头文件" class="headerlink" title="生成调用本地方法的.h头文件"></a>生成调用本地方法的.h头文件</h3><p>用as自带的Terminal工具来生成。<br>命令：<br>进入你项目的java文件夹下<br>cd app/src/main/java<br>com.lh.jni是你的完整包名，后面跟具体写有调用c代码的java类<br>javah -jni com.lh.jni.JniKit </p>
+<p><strong>未完待续</strong></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat_reward.jpg" alt="threetree 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NDK/" rel="tag"># NDK</a>
+          
+            <a href="/tags/JNI/" rel="tag"># JNI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/20/开源控件库/" rel="next" title="开源控件库">
+                <i class="fa fa-chevron-left"></i> 开源控件库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/27/懒加载Fragment/" rel="prev" title="懒加载Fragment">
+                懒加载Fragment <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="threetree" />
+            
+              <p class="site-author-name" itemprop="name">threetree</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#NDK配置"><span class="nav-number">1.</span> <span class="nav-text">NDK配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载NDK"><span class="nav-number">1.1.</span> <span class="nav-text">下载NDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置NDK路径"><span class="nav-number">1.2.</span> <span class="nav-text">配置NDK路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置NDK环境变量"><span class="nav-number">1.3.</span> <span class="nav-text">配置NDK环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置as"><span class="nav-number">1.4.</span> <span class="nav-text">设置as</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写代码"><span class="nav-number">2.</span> <span class="nav-text">编写代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建项目"><span class="nav-number">2.1.</span> <span class="nav-text">创建项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写调用c的java代码"><span class="nav-number">2.2.</span> <span class="nav-text">编写调用c的java代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成调用本地方法的-h头文件"><span class="nav-number">2.3.</span> <span class="nav-text">生成调用本地方法的.h头文件</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">threetree</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
