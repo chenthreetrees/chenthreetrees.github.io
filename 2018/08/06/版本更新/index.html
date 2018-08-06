@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="版本更新,后台下载," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。 简单使用需要权限（自行处理动态权限申请）：12345678&amp;lt;!-- 访问网络状态--&amp;gt;&amp;lt;uses-permission android:name=&amp;quot;android.permission.INTERNET&amp;quo">
+<meta name="keywords" content="版本更新,后台下载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="版本更新">
+<meta property="og:url" content="http://chenthreetrees.github.io/2018/08/06/版本更新/index.html">
+<meta property="og:site_name" content="三木">
+<meta property="og:description" content="简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。 简单使用需要权限（自行处理动态权限申请）：12345678&amp;lt;!-- 访问网络状态--&amp;gt;&amp;lt;uses-permission android:name=&amp;quot;android.permission.INTERNET&amp;quo">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-06T03:22:31.785Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="版本更新">
+<meta name="twitter:description" content="简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。 简单使用需要权限（自行处理动态权限申请）：12345678&amp;lt;!-- 访问网络状态--&amp;gt;&amp;lt;uses-permission android:name=&amp;quot;android.permission.INTERNET&amp;quo">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://chenthreetrees.github.io/2018/08/06/版本更新/"/>
+
+
+
+
+
+  <title>版本更新 | 三木</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">三木</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">自从当年我背井离乡，乡里人就没喝过一口水</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-android">
+          <a href="/android/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-android"></i> <br />
+            
+            Android
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://chenthreetrees.github.io/2018/08/06/版本更新/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="threetree">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="三木">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">版本更新</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-06T11:20:02+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+		  
+		  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+			</script>
+			
+				<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv">
+				</span> 次</span>
+			
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/封装/" itemprop="url" rel="index">
+                    <span itemprop="name">封装</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。<br>页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。</p>
+<h2 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h2><p>需要权限（自行处理动态权限申请）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 访问网络状态--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot; /&gt;</span><br><span class="line">&lt;!-- 外置存储存取权限 --&gt;</span><br><span class="line">&lt;permission android:name=&quot;android.permission.WRITE_MEDIA_STORAGE&quot;/&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;/&gt;</span><br></pre></td></tr></table></figure></p>
+<p>代码说明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * 兼容7.0，这个路径要跟xml目录下的路径一致</span><br><span class="line">    */</span><br><span class="line">   public static final String ROOT_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + &quot;your dir&quot; + File.separator;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">    * 用版本code来作为文件名，可以在应用启动的时候检查目录并删除不需要的apk文件</span><br><span class="line"> * 不要使用后缀</span><br><span class="line">    */</span><br><span class="line">   public static final String APK_NAME = &quot;temp_v&quot; + BuildConfig.VERSION_CODE;</span><br><span class="line"></span><br><span class="line">//更新配置</span><br><span class="line">VersionUpdate update = new VersionUpdate();</span><br><span class="line">       update.fileDir = ROOT_PATH;</span><br><span class="line">       update.fileName = APK_NAME ;</span><br><span class="line">       update.iconRes = R.mipmap.ic_launcher;//锁屏页面，通知栏显示的图标，一般使用app应用图标</span><br><span class="line">       update.content = &quot;发现新的版本，需要马上更新&quot;;</span><br><span class="line">       update.type = VersionUpdate.Type.MUSTUPDATE;//强更还是非强更</span><br><span class="line">       update.url = &quot;http://guawa-v3.oss-cn-shenzhen.aliyuncs.com/common/1533195088000APK.apk&quot;;</span><br><span class="line"></span><br><span class="line">//开始更新</span><br><span class="line">VersionUpdateHelper.getInstance()</span><br><span class="line">               .with(this)//context</span><br><span class="line">               .version(update)</span><br><span class="line">			//是否检查重复下载，注意开启此功能，会根据APK_NAME来检查，如果APK_NAME命名是写死的，则更新会失效，建议采用版本code来命名</span><br><span class="line">               .setCheckLoad(true)</span><br><span class="line">			//下载结果监听</span><br><span class="line">               .resultListener(new VersionUpdateHelper.OnUpdateResultListener() &#123;</span><br><span class="line">                   @Override</span><br><span class="line">                   public void onSuccess(String filePath)</span><br><span class="line">                   &#123;</span><br><span class="line">                       File file = new File(filePath);</span><br><span class="line">                       if(file.exists())</span><br><span class="line">                       &#123;</span><br><span class="line">                           installApk(file,MainActivity.this);</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;</span><br><span class="line"></span><br><span class="line">                   @Override</span><br><span class="line">                   public void onError(int code, String message)</span><br><span class="line">                   &#123;</span><br><span class="line">                       Toast.makeText(MainActivity.this,&quot;error:&quot; + message,Toast.LENGTH_SHORT).show();</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;)</span><br><span class="line">               .cancelListener(new VersionUpdateHelper.OnMustUpdateCancelListener() &#123;</span><br><span class="line">                   @Override</span><br><span class="line">                   public void onCancel()</span><br><span class="line">                   &#123;</span><br><span class="line">                       //取消强制更新，退出应用</span><br><span class="line">                       finish();</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;)</span><br><span class="line">               .startUpdateVersion();</span><br></pre></td></tr></table></figure></p>
+<h2 id="版本更新逻辑"><a href="#版本更新逻辑" class="headerlink" title="版本更新逻辑"></a>版本更新逻辑</h2><p>apk版本在哪里检查更新，强制更新还是非强制更新等，这些跟后端的设计有很大的关系。<br>有的在app启动的时候去检查更新，有的每个页面都检查更新，这里我采用如下逻辑：<br>1.app启动时候（或者首页），自动检测一次是否更新<br>2.每次请求接口都带上版本code，后台比对后，返回是否必须强更（非强更不做此逻辑），根据后台返回的最新版url下载</p>
+<h2 id="apk安装逻辑"><a href="#apk安装逻辑" class="headerlink" title="apk安装逻辑"></a>apk安装逻辑</h2><p>采用外存储来保存apk文件，对于安装完成后是否会删除apk文件，不同机型不一致，<br>所以我们要考虑安装完成后删除文件，否则占用用户的存储空间，使用如下逻辑：<br>将下载完成的新版本apk根据旧版本code来标识命名，当app启动的时候检查当前app的版本code，<br>并将apk的下载目录下的不等于该code的文件删除。两种情况：<br>1.app最新版本，则说明安装成功，此时code比旧版本的code大，删除下载目录下的apk文件<br>2.app安装未成功，此时code和旧版本code一致，不删除，如果apk文件下载完成，则安装，未完成则继续下载</p>
+<h2 id="安装APK"><a href="#安装APK" class="headerlink" title="安装APK"></a>安装APK</h2><p>解决在Android7.0之后的版本出现 android.os.FileUriExposedException 的问题：</p>
+<p>第一步：在AndroidManifest.xml清单文件中注册provider</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;provider</span><br><span class="line">    android:name=&quot;android.support.v4.content.FileProvider&quot;</span><br><span class="line">    android:authorities=&quot;com.threetree.ttversionupdate.installapk&quot;</span><br><span class="line">    android:grantUriPermissions=&quot;true&quot;</span><br><span class="line">    android:exported=&quot;false&quot;&gt;</span><br><span class="line">    &lt;!--元数据--&gt;</span><br><span class="line">    &lt;meta-data</span><br><span class="line">        android:name=&quot;android.support.FILE_PROVIDER_PATHS&quot;</span><br><span class="line">        android:resource=&quot;@xml/file_path&quot; /&gt;</span><br><span class="line">&lt;/provider&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：</p>
+<ol>
+<li>exported:必须为false </li>
+<li>grantUriPermissions:true，表示授予 URI 临时访问权限。 </li>
+<li>authorities 组件标识，都以包名开头,避免和其它应用发生冲突。</li>
+</ol>
+<p>第二步: 指定共享文件的目录,需要在res文件夹中新建xml目录,并且创建file_path</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;resources xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;</span><br><span class="line">    &lt;paths&gt;</span><br><span class="line">        &lt;external-path path=&quot;&quot; name=&quot;apk&quot;/&gt;</span><br><span class="line">    &lt;/paths&gt;</span><br><span class="line">&lt;/resources&gt;</span><br></pre></td></tr></table></figure>
+<p>上述代码中path=”“，是有特殊意义的，它表示根目录，name是子目录<br>也就是说你可以向其它的应用共享根目录及其子目录下任何一个文件了</p>
+<p>第三步：使用FileProvider</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//安装apk</span><br><span class="line">   private void installApk(File file, Context context) &#123;</span><br><span class="line">       Intent intent = new Intent();</span><br><span class="line">       intent.setAction(Intent.ACTION_VIEW);</span><br><span class="line">       intent.addCategory(Intent.CATEGORY_DEFAULT);</span><br><span class="line">       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);</span><br><span class="line">       if(Build.VERSION.SDK_INT&gt;=24) &#123; //判读版本是否在7.0以上</span><br><span class="line">           //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件</span><br><span class="line">           Uri apkUri =</span><br><span class="line">                   FileProvider.getUriForFile(context, &quot;com.threetree.ttversionupdate.installapk&quot;, file);</span><br><span class="line">           //添加这一句表示对目标应用临时授权该Uri所代表的文件</span><br><span class="line">           intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);</span><br><span class="line">           intent.setDataAndType(apkUri, &quot;application/vnd.android.package-archive&quot;);</span><br><span class="line">       &#125;else&#123;</span><br><span class="line">           intent.setDataAndType(Uri.fromFile(file),</span><br><span class="line">                   &quot;application/vnd.android.package-archive&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       context.startActivity(intent);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="删除apk文件（根据个人需求）"><a href="#删除apk文件（根据个人需求）" class="headerlink" title="删除apk文件（根据个人需求）"></a>删除apk文件（根据个人需求）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * 删除多余的apk文件</span><br><span class="line">    */</span><br><span class="line">   private void removeApkFile()</span><br><span class="line">   &#123;</span><br><span class="line">       File file = new File(ROOT_PATH);</span><br><span class="line">       if(!file.exists())</span><br><span class="line">       &#123;</span><br><span class="line">           return;</span><br><span class="line">       &#125;</span><br><span class="line">       if(!file.isDirectory())</span><br><span class="line">       &#123;</span><br><span class="line">           return;</span><br><span class="line">       &#125;</span><br><span class="line">       File[] files = file.listFiles();</span><br><span class="line">       if(files == null || files.length &lt;= 0)</span><br><span class="line">       &#123;</span><br><span class="line">           return;</span><br><span class="line">       &#125;</span><br><span class="line">       for (File f:files)</span><br><span class="line">       &#123;</span><br><span class="line">           try</span><br><span class="line">           &#123;</span><br><span class="line">               String name = getFileNameNoEx(f.getName());</span><br><span class="line">               if(!APK_NAME.equals(name))</span><br><span class="line">               &#123;</span><br><span class="line">                   f.delete();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;catch (Exception e)</span><br><span class="line">           &#123;</span><br><span class="line">               e.printStackTrace();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /*</span><br><span class="line">   * Java文件操作 获取不带扩展名的文件名</span><br><span class="line">   *</span><br><span class="line">   */</span><br><span class="line">   public static String getFileNameNoEx(String filename) &#123;</span><br><span class="line">       if ((filename != null) &amp;&amp; (filename.length() &gt; 0)) &#123;</span><br><span class="line">           int dot = filename.lastIndexOf(&apos;.&apos;);</span><br><span class="line">           if ((dot &gt;-1) &amp;&amp; (dot &lt; (filename.length()))) &#123;</span><br><span class="line">               return filename.substring(0, dot);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       return filename;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat_reward.jpg" alt="threetree 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/版本更新/" rel="tag"># 版本更新</a>
+          
+            <a href="/tags/后台下载/" rel="tag"># 后台下载</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/30/http框架/" rel="next" title="http框架">
+                <i class="fa fa-chevron-left"></i> http框架
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="threetree" />
+            
+              <p class="site-author-name" itemprop="name">threetree</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单使用"><span class="nav-number">1.</span> <span class="nav-text">简单使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#版本更新逻辑"><span class="nav-number">2.</span> <span class="nav-text">版本更新逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#apk安装逻辑"><span class="nav-number">3.</span> <span class="nav-text">apk安装逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装APK"><span class="nav-number">4.</span> <span class="nav-text">安装APK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除apk文件（根据个人需求）"><span class="nav-number">5.</span> <span class="nav-text">删除apk文件（根据个人需求）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">threetree</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
