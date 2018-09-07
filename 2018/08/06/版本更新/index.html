@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。 简单使用需要权限（自行处理动态权限申请）：12345678&amp;lt;!-- 访问网络状态--&amp;gt;&amp;lt;uses-permission android:name=&amp;quot;android.permission.INTERNET&amp;quo">
+<meta name="description" content="简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。">
 <meta name="keywords" content="版本更新,后台下载">
 <meta property="og:type" content="article">
 <meta property="og:title" content="版本更新">
 <meta property="og:url" content="http://chenthreetrees.github.io/2018/08/06/版本更新/index.html">
 <meta property="og:site_name" content="三木">
-<meta property="og:description" content="简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。 简单使用需要权限（自行处理动态权限申请）：12345678&amp;lt;!-- 访问网络状态--&amp;gt;&amp;lt;uses-permission android:name=&amp;quot;android.permission.INTERNET&amp;quo">
+<meta property="og:description" content="简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-06T03:22:31.785Z">
+<meta property="og:updated_time" content="2018-08-06T03:26:31.974Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="版本更新">
-<meta name="twitter:description" content="简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。 简单使用需要权限（自行处理动态权限申请）：12345678&amp;lt;!-- 访问网络状态--&amp;gt;&amp;lt;uses-permission android:name=&amp;quot;android.permission.INTERNET&amp;quo">
+<meta name="twitter:description" content="简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。">
 
 
 
@@ -370,7 +370,7 @@
       
 
       
-        <p>简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。<br>页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。</p>
+        <p>简单的封装了app更新操作，支持下载速度和百分比，后台跟新，锁屏显示更新进度，wifi环境判断和提醒。<br>页面进度弹框采用系统默认，如需要改造，可阅读代码自行改造。<br><a id="more"></a></p>
 <h2 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h2><p>需要权限（自行处理动态权限申请）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 访问网络状态--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot; /&gt;</span><br><span class="line">&lt;!-- 外置存储存取权限 --&gt;</span><br><span class="line">&lt;permission android:name=&quot;android.permission.WRITE_MEDIA_STORAGE&quot;/&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;/&gt;</span><br></pre></td></tr></table></figure></p>
 <p>代码说明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * 兼容7.0，这个路径要跟xml目录下的路径一致</span><br><span class="line">    */</span><br><span class="line">   public static final String ROOT_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + &quot;your dir&quot; + File.separator;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">    * 用版本code来作为文件名，可以在应用启动的时候检查目录并删除不需要的apk文件</span><br><span class="line"> * 不要使用后缀</span><br><span class="line">    */</span><br><span class="line">   public static final String APK_NAME = &quot;temp_v&quot; + BuildConfig.VERSION_CODE;</span><br><span class="line"></span><br><span class="line">//更新配置</span><br><span class="line">VersionUpdate update = new VersionUpdate();</span><br><span class="line">       update.fileDir = ROOT_PATH;</span><br><span class="line">       update.fileName = APK_NAME ;</span><br><span class="line">       update.iconRes = R.mipmap.ic_launcher;//锁屏页面，通知栏显示的图标，一般使用app应用图标</span><br><span class="line">       update.content = &quot;发现新的版本，需要马上更新&quot;;</span><br><span class="line">       update.type = VersionUpdate.Type.MUSTUPDATE;//强更还是非强更</span><br><span class="line">       update.url = &quot;http://guawa-v3.oss-cn-shenzhen.aliyuncs.com/common/1533195088000APK.apk&quot;;</span><br><span class="line"></span><br><span class="line">//开始更新</span><br><span class="line">VersionUpdateHelper.getInstance()</span><br><span class="line">               .with(this)//context</span><br><span class="line">               .version(update)</span><br><span class="line">			//是否检查重复下载，注意开启此功能，会根据APK_NAME来检查，如果APK_NAME命名是写死的，则更新会失效，建议采用版本code来命名</span><br><span class="line">               .setCheckLoad(true)</span><br><span class="line">			//下载结果监听</span><br><span class="line">               .resultListener(new VersionUpdateHelper.OnUpdateResultListener() &#123;</span><br><span class="line">                   @Override</span><br><span class="line">                   public void onSuccess(String filePath)</span><br><span class="line">                   &#123;</span><br><span class="line">                       File file = new File(filePath);</span><br><span class="line">                       if(file.exists())</span><br><span class="line">                       &#123;</span><br><span class="line">                           installApk(file,MainActivity.this);</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;</span><br><span class="line"></span><br><span class="line">                   @Override</span><br><span class="line">                   public void onError(int code, String message)</span><br><span class="line">                   &#123;</span><br><span class="line">                       Toast.makeText(MainActivity.this,&quot;error:&quot; + message,Toast.LENGTH_SHORT).show();</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;)</span><br><span class="line">               .cancelListener(new VersionUpdateHelper.OnMustUpdateCancelListener() &#123;</span><br><span class="line">                   @Override</span><br><span class="line">                   public void onCancel()</span><br><span class="line">                   &#123;</span><br><span class="line">                       //取消强制更新，退出应用</span><br><span class="line">                       finish();</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;)</span><br><span class="line">               .startUpdateVersion();</span><br></pre></td></tr></table></figure></p>
 <h2 id="版本更新逻辑"><a href="#版本更新逻辑" class="headerlink" title="版本更新逻辑"></a>版本更新逻辑</h2><p>apk版本在哪里检查更新，强制更新还是非强制更新等，这些跟后端的设计有很大的关系。<br>有的在app启动的时候去检查更新，有的每个页面都检查更新，这里我采用如下逻辑：<br>1.app启动时候（或者首页），自动检测一次是否更新<br>2.每次请求接口都带上版本code，后台比对后，返回是否必须强更（非强更不做此逻辑），根据后台返回的最新版url下载</p>
@@ -456,6 +456,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/08/13/recyclerfragment/" rel="prev" title="recyclerfragment">
+                recyclerfragment <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -535,7 +539,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -557,7 +561,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
